@@ -5,8 +5,6 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.Composer;
-import de.htwds.jaquel.mysql.MySQLComposer;
-import java.util.Collections;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -14,9 +12,9 @@ import org.junit.Test;
  *
  * @author phucluoi
  */
-public class MyComposerTest extends TestCase {
+public class MySQLComposerTest extends TestCase {
 	
-	public MyComposerTest(String testName) {
+	public MySQLComposerTest(String testName) {
 		super(testName);
 	}
 	

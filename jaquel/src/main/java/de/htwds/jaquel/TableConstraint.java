@@ -10,7 +10,12 @@ import java.util.List;
  *
  * @author hbui
  */
-interface TableConstraint {
+public interface TableConstraint {
 	Primary primaryKey(List<String> cols);
+	Primary primaryKey(String... cols);// liberal
+	Primary primaryKey(String col);
+
 	Foreign foreignKey(List<String> cols);
+	Foreign foreignKey(String... cols);// liberal
+	Foreign foreignKey(String cols);
 }

@@ -8,6 +8,5 @@ package de.htwds.jaquel;
  *
  * @author hbui
  */
-interface Primary extends CompleteSQL{
-	
+public interface Primary extends CompleteSQL, ConstraintStep{
 }

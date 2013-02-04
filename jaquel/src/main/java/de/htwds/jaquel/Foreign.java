@@ -1,9 +1,12 @@
 package de.htwds.jaquel;
 
+import java.util.List;
+
 /**
  *
  * @author hbui
  */
-interface Foreign extends CompleteSQL{
-	
+public interface Foreign {
+	public References references(String constraintTab, String col);
+	public References references(String constraintTab, List<String> cols);
 }

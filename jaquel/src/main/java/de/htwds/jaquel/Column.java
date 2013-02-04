@@ -4,8 +4,9 @@ package de.htwds.jaquel;
  *
  * @author hbui
  */
-interface Column extends TableDefinition, CompleteSQL{
+public interface Column extends Table, CompleteSQL{
 	TableConstraint constraint(String name);
 	Column unique();
 	Column notNull();
+	Column autoIncrement();
 }

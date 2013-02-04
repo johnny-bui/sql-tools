@@ -29,11 +29,13 @@ $comment: =========== constrains ======== $
 
 $macro: constraints (constraints_name)$
 $macro: primary_key$ 
-	CONSTRAINT `$(constraints_name)` PRIMARY KEY($expand: col, separator=", "$) $no_eol$
+	CONSTRAINT `$(constraints_name)` 
+		PRIMARY KEY($expand: col, separator=", "$) $no_eol$
 $end: primary_key$ 
 $macro: foreign_key(col_name, foreign_tab, foreign_col)$ 
-	CONSTRAINT `$(constraints_name)` FOREIGN KEY `$(col_name)` 
-		REFERENCES `$(foreign_tab)` (`$(foreign_col)`) $no_eol$
+	CONSTRAINT `$(constraints_name)` 
+		FOREIGN KEY `$(col_name)` 
+			REFERENCES `$(foreign_tab)` (`$(foreign_col)`) $no_eol$
 $end: foreign_key$
 $end: constraints$
 

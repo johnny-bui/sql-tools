@@ -1,0 +1,101 @@
+/* 
+	filename   : DDLGrammar.ssc
+	created on : Feb 4, 2013
+	description:
+*/
+
+/* define package-prefix */
+Package ddlgrammar;
+
+Helpers
+	letter = [['a' .. 'z']+['A'..'Z']];
+	digit = ['0'..'9'];
+	letter_or_digit = letter | digit | '$' | '_';
+	
+
+/* define token */
+Tokens
+	number = ['0' .. '9']+;
+	l_par = '(';
+	r_par = ')';
+	comma = ',';
+	semicolon = ';';
+
+	// Keywords
+	create = 'CREATE';
+	table = 'TABLE';
+	if = 'IF';
+	exists = 'EXISTS';
+	
+	integer = 'integer';
+	bigint = 'bigint';
+	float = 'float';
+	timestamp = 'timestamp';
+	varchar = 'varchar';
+	constraint = 'constraint';
+	foreign = 'foreign';
+	primary = 'primary';
+	key = 'key';
+	unique = 'unique';
+	not = 'not'|'NOT';
+	null = 'null';	
+	references = 'references';	
+
+	blank = (' ' | 13 | 10 | 9)+;
+
+	identifier = letter letter_or_digit*;
+	
+
+/* Token to be ignored */
+Ignored Tokens
+	blank;
+
+
+Productions
+	ddl = create_table+;
+	
+	create_table = create table if not exists identifier table_definition semicolon;
+	
+	table_definition =
+		l_par col_def addition_col_def* table_constraint_tail* r_par;
+	
+	col_def = identifier type col_constraint*;
+
+	type = 
+		 {int} integer 
+		|{bigint} bigint 
+		|{float} float 
+		|{timestamp} timestamp 
+		|{chars} varchar l_par number+ r_par;
+	
+	col_constraint = 
+		 {unique} unique
+		|{not_null} not_null
+		;	
+
+	not_null = not null;
+
+	addition_col_def = comma col_def;
+
+	table_constraint_list 
+		= table_constraint table_constraint_tail*;
+
+	table_constraint = 
+		 {primary_key} primary_key
+		|{foreign_key} foreign_key;
+	
+	table_constraint_tail = 
+		comma table_constraint;
+
+	primary_key = constraint [name]:identifier primary key l_par [col]:identifier r_par;
+	foreign_key = constraint [name]:identifier foreign key l_par cols r_par references_clausel;
+	
+	cols = identifier more_identifier*;
+	more_identifier = comma identifier;
+	
+	references_clausel = 
+		references identifier l_par cols r_par;
+
+
+
+		

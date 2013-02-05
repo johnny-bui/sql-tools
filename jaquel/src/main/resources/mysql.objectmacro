@@ -32,19 +32,25 @@ $macro: primary_key$
 	CONSTRAINT `$(constraints_name)` 
 		PRIMARY KEY($expand: col, separator=", "$) $no_eol$
 $end: primary_key$ 
-$macro: foreign_key(col_name, foreign_tab, foreign_col)$ 
+$macro: foreign_key$ 
 	CONSTRAINT `$(constraints_name)` 
-		FOREIGN KEY `$(col_name)` 
-			REFERENCES `$(foreign_tab)` (`$(foreign_col)`) $no_eol$
+		FOREIGN KEY($expand: col, separator=", "$) 
+			$expand: references_clausel$ $no_eol$
 $end: foreign_key$
 $end: constraints$
 
+$comment: ========= references_clausel ===== $
+
+$macro: references_clausel(foreign_tab)$
+REFERENCES `$foreign_tab` ($expand: col, separator=", "$) $no_eol$ 
+$end: references_clausel$
 
 $comment: ========== col_list ===== $
 
 $macro: col(col_name)$
 `$(col_name)`$no_eol$
 $end: col$
+
 
 
 

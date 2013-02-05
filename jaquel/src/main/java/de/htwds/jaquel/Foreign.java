@@ -9,4 +9,5 @@ import java.util.List;
 public interface Foreign {
 	public References references(String constraintTab, String col);
 	public References references(String constraintTab, List<String> cols);
+	public References references(String constraintTab, String... cols);
 }

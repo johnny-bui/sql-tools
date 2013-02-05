@@ -5,6 +5,9 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.Composer;
+import java.util.ArrayList;
+import java.util.List;
+import javax.management.RuntimeErrorException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -63,7 +66,8 @@ public class MySQLComposerTest extends TestCase {
 				.getSQL();
 		System.err.println(constraintMiddle);
 	}
-
+	
+	@Test
 	public void testTableWithTableConstraint(){
 		Composer p = new MySQLComposer();
 		
@@ -94,5 +98,146 @@ public class MySQLComposerTest extends TestCase {
 						.references("constraintTab","c1")
 				.getSQL();
 		System.out.println(twoRulesTable);
-	}		
+		
+		List<String> refCols = new ArrayList<String>();
+		refCols.add("id");
+		refCols.add("rul1");
+		refCols.add("rul2");
+
+		String twoRulesInListTable = p.createTable("twoRule")
+				.column("id", "bigint")
+				.column("rul1", "integer")
+				.column("rule2", "text")
+				.constraint("r1").primaryKey(refCols)
+				.getSQL();
+		System.out.println(twoRulesInListTable);
+	}
+	
+	public void testTableWithTableConstraint2(){
+		Composer p = new MySQLComposer();
+		
+		String tableDualPrimaryKey = p.createTable("constraintTab")
+				.column("c1", "bigint")
+				.column("bbb", "bigint").unique().notNull()
+				.column("c2", "varchar(5000)")
+				.constraint("rule_one").
+					primaryKey("c1", "bbb")
+				.getSQL();
+		System.out.println(tableDualPrimaryKey);
+		
+		String twoRulesTable = p.createTable("twoRule")
+				.column("id", "bigint")
+				.column("rul1", "integer")
+				.column("rule2", "text")
+				.constraint("r1").primaryKey("id","rul1","rul2")
+				.constraint("r2").foreignKey("id","rul1","rul2")
+						.references("constraintTab","c1","bbb","c2")
+				.getSQL();
+		System.out.println(twoRulesTable);
+
+		List<String> refCols = new ArrayList<String>();
+		refCols.add("id");
+		refCols.add("rul1");
+		refCols.add("rul2");
+
+		String twoRulesInListTable = p.createTable("twoRule")
+				.column("id", "bigint")
+				.column("rul1", "integer")
+				.column("rule2", "text")
+				.constraint("r1").foreignKey(refCols)
+					.references("xxxx", refCols)
+				.getSQL();
+		System.out.println(twoRulesInListTable);
+		
+		String threeRulesInListTable = p.createTable("twoRule")
+				.column("id", "bigint")
+				.column("rul1", "integer")
+				.column("rule2", "text")
+				.constraint("r1").foreignKey(refCols)
+					.references("xxxx", refCols)
+				.constraint("r3").primaryKey(refCols)
+				.getSQL();
+		System.out.println(threeRulesInListTable);
+	}
+
+	@Test
+	public void testRefercencesNotMatch(){
+		Composer p = new MySQLComposer();
+		List<String> refCols = new ArrayList<String>();
+		refCols.add("id");
+		refCols.add("rul1");
+		refCols.add("rul2");
+		try{
+			String threeRulesInListTable = p.createTable("twoRule")
+					.column("id", "bigint")
+					.column("rul1", "integer")
+					.column("rule2", "text")
+					.constraint("r1").foreignKey(refCols)
+						.references("xxxx", "a","b", "c", "d")
+					.constraint("r3").primaryKey(refCols)
+					.getSQL();
+			System.out.println(threeRulesInListTable);
+			fail("expected an runtime exception because the columns do not match");
+		}catch (RuntimeException ex){
+			// all OK
+			System.out.println(">>>>>>> " +ex.getMessage());
+		}
+	}
+
+	@Test
+	public void testRefercencesNotMatch2(){
+		Composer p = new MySQLComposer();
+		List<String> refCols = new ArrayList<String>();
+		refCols.add("id");
+		refCols.add("rul1");
+		refCols.add("rul2");
+		
+		List<String> refCols2 = new ArrayList<String>();
+		refCols2.add("id");
+		refCols2.add("rul1");
+		refCols2.add("rul2");
+		refCols2.add("rul3");
+		
+		try{
+			String threeRulesInListTable = p.createTable("twoRule")
+					.column("id", "bigint")
+					.column("rul1", "integer")
+					.column("rule2", "text")
+					.constraint("r1").foreignKey(refCols)
+						.references("xxxx", refCols2)
+					.constraint("r3").primaryKey(refCols)
+					.getSQL();
+			System.out.println(threeRulesInListTable);
+			fail("expected an runtime exception because the columns do not match");
+		}catch (RuntimeException ex){
+			// all OK
+			System.out.println(">>>>>>> " +ex.getMessage());
+		}
+	}
+	
+
+	@Test
+	public void testRefercencesNotMatch3(){
+		Composer p = new MySQLComposer();
+		List<String> refCols = new ArrayList<String>();
+		refCols.add("id");
+		refCols.add("rul1");
+		refCols.add("rul2");
+		
+		try{
+			String threeRulesInListTable = p.createTable("twoRule")
+					.column("id", "bigint")
+					.column("rul1", "integer")
+					.column("rule2", "text")
+					.constraint("r1").foreignKey(refCols)
+						.references("xxxx", "yyyy")
+					.constraint("r3").primaryKey(refCols)
+					.getSQL();
+			System.out.println(threeRulesInListTable);
+			fail("expected an runtime exception because the columns do not match");
+		}catch (RuntimeException ex){
+			// all OK
+			System.out.println(">>>>>>> " +ex.getMessage());
+		}
+	}
 }

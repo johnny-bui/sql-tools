@@ -4,7 +4,7 @@
 
 	<groupId>de.htwds</groupId>
 	<artifactId>jaquel</artifactId>
-	<version>1.0-beta.0</version>
+	<version>1.0-beta.1</version>
 	<packaging>jar</packaging>
 
 	<name>jaquel</name>
@@ -19,7 +19,7 @@
 			<plugin>
 				<groupId>de.htwds</groupId>
 				<artifactId>objectmacro-maven-plugin</artifactId>
-				<version>1.0-beta.2</version>
+				<version>1.0-beta.1</version>
 				<!-- =============================================
 					All config parameters here are used for 
 					every objectmacro files defined below, unless
@@ -111,16 +111,16 @@
 					</execution>
 				</executions>
 			</plugin-->
-		 <plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-compiler-plugin</artifactId>
-		  <version>2.3.2</version>
-		  <configuration>
-		   <source>1.6</source>
-		   <target>1.6</target>
-		  </configuration>
-		 </plugin>
-		<plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.5.7.201204190339</version>
@@ -150,4 +150,14 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Internal Repository</name>
+			<!-- ================ C A U T I O N =======================
+				Define this property in your settings.xml! 
+			=========================================================== -->
+			<url>${internal.repo.path}</url>
+		</repository>
+	</distributionManagement>
 </project>

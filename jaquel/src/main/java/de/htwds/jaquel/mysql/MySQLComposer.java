@@ -5,9 +5,12 @@ import de.htwds.jaquel.Composer;
 import de.htwds.jaquel.Foreign;
 import de.htwds.jaquel.Primary;
 import de.htwds.jaquel.References;
-import de.htwds.jaquel.Table;
+import de.htwds.jaquel.CreateTable;
+import de.htwds.jaquel.DropTable;
 import de.htwds.jaquel.TableConstraint;
 import java.util.List;
+
+
 
 /**
  *
@@ -17,14 +20,19 @@ import java.util.List;
 public class MySQLComposer implements Composer{
 
 	@Override
-	public Table createTable(String tableName) {
-		return new MySQLTable(tableName);
+	public CreateTable createTable(String tableName) {
+		return new MySQLCreateTable(tableName);
+	}
+
+	@Override
+	public DropTable dropTable(String tableName) {
+		return new MySQLDropTable(tableName);
 	}
 }
 
-class MySQLTable implements Table{
+class MySQLCreateTable implements CreateTable{
 	MCreateTable tab;
-	MySQLTable(String tableName) {
+	MySQLCreateTable(String tableName) {
 		tab = new MCreateTable(tableName);
 	}
 	
@@ -265,4 +273,17 @@ class MySQLRefenrencesClause implements References{
 		return new MySQLTableConstraint(t, name);
 	}
 
+}
+
+
+class MySQLDropTable implements DropTable {
+	private final MDropTable tab;
+	public MySQLDropTable(String tableName) {
+		tab = new MDropTable(tableName);
+	}
+
+	@Override
+	public String getSQL() {
+		return tab.toString();
+	}
 }

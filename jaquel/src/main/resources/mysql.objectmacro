@@ -5,7 +5,9 @@ Autor
 	Hong Phuc Bui
 $end$
 
+$comment: ============================ $
 $comment: ========= create_table ===== $
+$comment: ============================ $
 
 $macro: create_table(name)$
 CREATE TABLE IF NOT EXISTS `$name` (
@@ -51,18 +53,24 @@ $macro: col(col_name)$
 `$(col_name)`$no_eol$
 $end: col$
 
-
-
-
 $comment: ========== table_option ===== $
 
 $text:table_option$
 ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 $no_eol$
 $end:table_option$
 
+
+
+$comment: ============================== $
+$comment: ====== drop table ============ $
+$comment: ============================== $
+
+$macro: drop_table(name)$
+DROP TABLE IF EXISTS `$(name)` $insert: delimiter$
+$end: drop_table$
+
 $comment: ========== SQL demiliter ===== $
 
 $text:delimiter$ 
 ;
 $end:delimiter$
-

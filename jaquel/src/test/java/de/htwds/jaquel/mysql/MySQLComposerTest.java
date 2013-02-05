@@ -7,7 +7,6 @@ package de.htwds.jaquel.mysql;
 import de.htwds.jaquel.Composer;
 import java.util.ArrayList;
 import java.util.List;
-import javax.management.RuntimeErrorException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -239,5 +238,12 @@ public class MySQLComposerTest extends TestCase {
 			// all OK
 			System.out.println(">>>>>>> " +ex.getMessage());
 		}
+	}
+
+	@Test
+	public void testDropTable(){
+		Composer p = new MySQLComposer();
+		String sql = p.dropTable("xxxxxx").getSQL();
+		System.out.println(sql);
 	}
 }

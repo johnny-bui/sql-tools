@@ -5,5 +5,6 @@ package de.htwds.jaquel;
  * @author hbui
  */
 public interface Composer {
-	public Table createTable(String tableName);	
+	public CreateTable createTable(String tableName);	
+	public DropTable dropTable(String tableName);
 }

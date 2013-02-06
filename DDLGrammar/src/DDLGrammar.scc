@@ -36,6 +36,7 @@ Helpers
 	x = 'x'|'X';
 	y = 'y'|'Y';
 	z = 'z'|'Z';
+	backquote = '`';
 
 /* define token */
 Tokens
@@ -70,7 +71,7 @@ Tokens
 
 	blank = (' ' | 13 | 10 | 9)+;
 
-	identifier = letter letter_or_digit*;
+	identifier = (backquote letter letter_or_digit* backquote) | (letter letter_or_digit*);
 	
 
 /* Token to be ignored */

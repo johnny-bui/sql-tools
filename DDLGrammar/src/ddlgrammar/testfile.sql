@@ -9,3 +9,5 @@ CREATE TABLE IF NOT EXISTS h (
 constraint `yyyy` primary key (a) ,
 constraint zzzz foreign key (a) references halloworld (xxx)
 );
+
+DroP TaBle If Exists `xxxxxx`;

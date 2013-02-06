@@ -47,16 +47,18 @@ Tokens
 	semicolon = ';';
 
 	// Keywords
-	create = c r e a t e;
-	table = t a b l e;
-	if = i f;
-	exists = e x i s t s;//'EXISTS';
-	
+		// data type
 	integer = i n t e g e r;
 	bigint = b  i g i n t;
 	float = f l o a t;
 	timestamp = t i m e s t a m p ;
 	varchar = v a r c h a r;
+		// KW in create table statement
+	create = c r e a t e;
+	table = t a b l e;
+	if = i f;
+	exists = e x i s t s;
+	
 	constraint = c o n s t r a i n t;
 	foreign = f o r e i g n ;
 	primary = p r i m a r y;
@@ -65,8 +67,11 @@ Tokens
 	not = n o t;
 	null = n u l l;	
 	references = r e f e r e n c e s;	
-
+		// KW in drop table statement
 	drop = d r o p;
+		// KW in truncate table statement
+	truncate = t r u n c a t e;
+	
 	
 
 	blank = (' ' | 13 | 10 | 9)+;
@@ -86,6 +91,7 @@ Productions
 		//| ;
  
 	ddl = {create} create_table
+		| {truncate} truncate_table
 		| {drop} drop_table;
 
 /////////////////////////////////////////////////////////////////////////////////////	
@@ -132,6 +138,7 @@ Productions
 		references identifier l_par cols r_par;
 
 ////////////////////////////////////////////////////////////////////////////////
-	drop_table = drop table if exists identifier;
+	drop_table = drop table if exists identifier semicolon;
 
-		
+////////////////////////////////////////////////////////////////////////////////
+	truncate_table = truncate table identifier semicolon;	

@@ -69,6 +69,15 @@ $macro: drop_table(name)$
 DROP TABLE IF EXISTS `$(name)` $insert: delimiter$
 $end: drop_table$
 
+$comment: ============================== $
+$comment: ====== truncate table ============ $
+$comment: ============================== $
+
+$macro: truncate_table(name)$
+TRUNCATE TABLE `$(name)` $insert: delimiter$
+$end: truncate_table$
+
+
 $comment: ========== SQL demiliter ===== $
 
 $text:delimiter$ 

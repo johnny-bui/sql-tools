@@ -246,4 +246,12 @@ public class MySQLComposerTest extends TestCase {
 		String sql = p.dropTable("xxxxxx").getSQL();
 		System.out.println(sql);
 	}
+	
+	@Test
+	public void testTruncateTable(){
+		Composer p = new MySQLComposer();
+		String sql = p.truncateTable("xxxxx").getSQL();
+		System.out.println(sql);
+	}
+
 }

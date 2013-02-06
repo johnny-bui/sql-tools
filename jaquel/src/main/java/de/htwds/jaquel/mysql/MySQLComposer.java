@@ -8,7 +8,9 @@ import de.htwds.jaquel.References;
 import de.htwds.jaquel.CreateTable;
 import de.htwds.jaquel.DropTable;
 import de.htwds.jaquel.TableConstraint;
+import de.htwds.jaquel.TruncateTable;
 import java.util.List;
+
 
 
 
@@ -28,7 +30,13 @@ public class MySQLComposer implements Composer{
 	public DropTable dropTable(String tableName) {
 		return new MySQLDropTable(tableName);
 	}
+
+	@Override
+	public TruncateTable truncateTable(String tableName) {
+		return new MySQLTruncateTable(tableName);
+	}
 }
+
 
 class MySQLCreateTable implements CreateTable{
 	MCreateTable tab;
@@ -286,4 +294,19 @@ class MySQLDropTable implements DropTable {
 	public String getSQL() {
 		return tab.toString();
 	}
+}
+
+
+class MySQLTruncateTable implements TruncateTable{
+	private final MTruncateTable tab;
+
+	MySQLTruncateTable(String tableName) {
+		tab = new MTruncateTable(tableName);
+	}
+
+	@Override
+	public String getSQL() {
+		return tab.toString();
+	}
+	
 }

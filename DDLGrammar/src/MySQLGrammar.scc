@@ -5,12 +5,12 @@
 */
 
 /* define package-prefix */
-Package ddlgrammar;
+Package mysqlgrm;
 
 Helpers
 	letter = [['a' .. 'z']+['A'..'Z']];
 	digit = ['0'..'9'];
-	letter_or_digit = letter | digit | '$' | '_';
+	letter_or_digit = letter | digit | '_';
 	a = 'a'|'A';
 	b = 'b'|'B';
 	c = 'c'|'C';
@@ -37,14 +37,29 @@ Helpers
 	y = 'y'|'Y';
 	z = 'z'|'Z';
 	backquote = '`';
+	cr  = 0x000d;
+	lf  = 0x000a;
+
+	number = ['0' .. '9']+;
+	dot = '.';
+	at = '@';
+
+	escape_sequence = '\b' | '\t' | '\n' | '\f' | '\r' | '\"' | '\' ''' | '\\' ;
+	unicode_input_character = [0..0xffff];
+	input_character = [unicode_input_character - [cr + lf]];
+	string_character = [input_character - ['"' + '\']] | escape_sequence;
+	line_terminator = lf | cr | cr lf;
+	string_literal = '"' string_character* '"';	
+
 
 /* define token */
 Tokens
-	number = ['0' .. '9']+;
 	l_par = '(';
 	r_par = ')';
 	comma = ',';
 	semicolon = ';';
+	floating_point_number = digit+ dot digit*;
+	integer_number = number;
 
 	// Keywords
 		// data type
@@ -71,13 +86,17 @@ Tokens
 	drop = d r o p;
 		// KW in truncate table statement
 	truncate = t r u n c a t e;
-	
+		// KW in insert into
+	insert = i n s e r t;
+	into = i n t o;
+	values = v a l u e | v a l u e s ;
 	
 
 	blank = (' ' | 13 | 10 | 9)+;
+	var = at letter_or_digit+;
 
 	identifier = (backquote letter letter_or_digit* backquote) | (letter letter_or_digit*);
-	
+	string_literal = '"' string_character* '"';
 
 /* Token to be ignored */
 Ignored Tokens
@@ -87,9 +106,11 @@ Ignored Tokens
 Productions
 	sql = sttm+;
 	sttm 
-		={ddl} ddl;
-		//| ;
- 
+		={ddl} ddl
+		|{dml} dml;
+
+////////////////////////////////////////////////////////////////////////////////////
+/* ========================================================================= */
 	ddl = {create} create_clausel semicolon
 		| {truncate} truncate_clausel semicolon
 		| {drop} drop_clausel semicolon;
@@ -107,7 +128,7 @@ Productions
 		|{bigint} bigint 
 		|{float} float 
 		|{timestamp} timestamp 
-		|{chars} varchar l_par number+ r_par;
+		|{chars} varchar l_par integer_number+ r_par;
 	
 	col_constraint = 
 		 {unique} unique
@@ -142,3 +163,23 @@ Productions
 
 ////////////////////////////////////////////////////////////////////////////////
 	truncate_clausel = truncate table identifier;	
+
+/* Data manipulation language */
+	dml = insert_clausel semicolon;
+
+	insert_clausel = insert into identifier 
+			[l_tupel_par]:l_par [tupel]:cols [r_tupel_par]:r_par 
+			T.values value_clausel+;
+
+	value_clausel =  [l_value_par]:l_par [value]:P.values [r_value_par]:r_par;
+
+	values = single_value more_single_value*;
+	single_value = 
+		{var} var
+		|{int} integer_number
+		|{float} floating_point_number
+		|{string} string_literal;
+	
+	more_single_value = comma single_value;		
+
+

@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ddlgrammar;
+package sqlgrammar;
 
-import ddlgrammar.lexer.Lexer;
-import ddlgrammar.lexer.LexerException;
-import ddlgrammar.parser.Parser;
-import ddlgrammar.parser.ParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
+import mysqlgrm.lexer.Lexer;
+import mysqlgrm.lexer.LexerException;
+import mysqlgrm.parser.Parser;
+import mysqlgrm.parser.ParserException;
 
 /**
  *
@@ -36,6 +36,7 @@ public class DDLGrammar {
 			System.err.println(ex.getToken().getText());
 		} catch (IOException ex) {
 			System.err.println(ex);
+			ex.printStackTrace();
 		}
 	}
 }

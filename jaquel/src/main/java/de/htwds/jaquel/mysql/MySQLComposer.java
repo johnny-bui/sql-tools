@@ -1,7 +1,7 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.Column;
-import de.htwds.jaquel.Composer;
+import de.htwds.jaquel.DDLComposer;
 import de.htwds.jaquel.Foreign;
 import de.htwds.jaquel.Primary;
 import de.htwds.jaquel.References;
@@ -19,7 +19,7 @@ import java.util.List;
  * @author phucluoi
  * @version Feb 4, 2013
  */
-public class MySQLComposer implements Composer{
+public class MySQLComposer implements DDLComposer{
 
 	@Override
 	public CreateTable createTable(String tableName) {

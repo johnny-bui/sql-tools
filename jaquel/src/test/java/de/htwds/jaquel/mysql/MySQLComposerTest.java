@@ -4,7 +4,7 @@
  */
 package de.htwds.jaquel.mysql;
 
-import de.htwds.jaquel.Composer;
+import de.htwds.jaquel.DDLComposer;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -31,11 +31,11 @@ public class MySQLComposerTest extends TestCase {
 	}
 
 	/**
-	 * Test of createTable method, of class Composer.
+	 * Test of createTable method, of class DDLComposer.
 	 */
 	@Test
 	public void testVerySimpleTable() {
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		String sql = p.createTable("hellojaquel")
 				.column("hallo", "varchar(40)")
 				.column("jaquel", "varchar(100)")
@@ -45,7 +45,7 @@ public class MySQLComposerTest extends TestCase {
 	
 	@Test
 	public void testTableWithColumnConstraint(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		String constraintFirst = p.createTable("columnConstraint")
 				.column("column", "bigint").unique().notNull()
 				.column("dummy", "float")
@@ -68,7 +68,7 @@ public class MySQLComposerTest extends TestCase {
 	
 	@Test
 	public void testTableWithTableConstraint(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		
 		String simpleTableConstraint = p.createTable("constraintTab")
 				.column("c1", "bigint")
@@ -113,7 +113,7 @@ public class MySQLComposerTest extends TestCase {
 	}
 	
 	public void testTableWithTableConstraint2(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		
 		String tableDualPrimaryKey = p.createTable("constraintTab")
 				.column("c1", "bigint")
@@ -161,7 +161,7 @@ public class MySQLComposerTest extends TestCase {
 
 	@Test
 	public void testRefercencesNotMatch(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
 		refCols.add("rul1");
@@ -185,7 +185,7 @@ public class MySQLComposerTest extends TestCase {
 
 	@Test
 	public void testRefercencesNotMatch2(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
 		refCols.add("rul1");
@@ -217,7 +217,7 @@ public class MySQLComposerTest extends TestCase {
 
 	@Test
 	public void testRefercencesNotMatch3(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
 		refCols.add("rul1");
@@ -242,14 +242,14 @@ public class MySQLComposerTest extends TestCase {
 
 	@Test
 	public void testDropTable(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		String sql = p.dropTable("xxxxxx").getSQL();
 		System.out.println(sql);
 	}
 	
 	@Test
 	public void testTruncateTable(){
-		Composer p = new MySQLComposer();
+		DDLComposer p = new MySQLComposer();
 		String sql = p.truncateTable("xxxxx").getSQL();
 		System.out.println(sql);
 	}

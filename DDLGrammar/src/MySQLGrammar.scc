@@ -90,12 +90,12 @@ Productions
 		={ddl} ddl;
 		//| ;
  
-	ddl = {create} create_table
-		| {truncate} truncate_table
-		| {drop} drop_table;
+	ddl = {create} create_clausel semicolon
+		| {truncate} truncate_clausel semicolon
+		| {drop} drop_clausel semicolon;
 
 /////////////////////////////////////////////////////////////////////////////////////	
-	create_table = create table if not exists identifier table_definition semicolon;
+	create_clausel = create table if not exists identifier table_definition ;
 	
 	table_definition =
 		l_par col_def addition_col_def* table_constraint_tail* r_par;
@@ -138,7 +138,7 @@ Productions
 		references identifier l_par cols r_par;
 
 ////////////////////////////////////////////////////////////////////////////////
-	drop_table = drop table if exists identifier semicolon;
+	drop_clausel = drop table if exists identifier ;
 
 ////////////////////////////////////////////////////////////////////////////////
-	truncate_table = truncate table identifier semicolon;	
+	truncate_clausel = truncate table identifier;	

@@ -79,12 +79,12 @@ $end: truncate_table$
 
 $macro: insert_into(name)$
 INSERT INTO `$(name)` ($expand: col, separator=","$) VALUES 
-$expand: tupel$ 
+$expand: tupel, separator=",\n"$ 
 $insert: delimiter$
 $end: insert_into$
 
 $macro: tupel$
-	($expand: values, separator=", "$)
+($expand: values, separator=", "$)$no_eol$
 $end: tupel$
 
 $macro: values(literal)$

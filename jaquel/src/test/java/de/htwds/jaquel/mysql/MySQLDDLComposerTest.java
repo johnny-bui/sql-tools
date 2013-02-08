@@ -14,9 +14,9 @@ import org.junit.Test;
  *
  * @author phucluoi
  */
-public class MySQLComposerTest extends TestCase {
+public class MySQLDDLComposerTest extends TestCase {
 	
-	public MySQLComposerTest(String testName) {
+	public MySQLDDLComposerTest(String testName) {
 		super(testName);
 	}
 	

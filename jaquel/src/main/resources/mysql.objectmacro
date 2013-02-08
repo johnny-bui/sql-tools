@@ -77,6 +77,19 @@ $macro: truncate_table(name)$
 TRUNCATE TABLE `$(name)` $insert: delimiter$
 $end: truncate_table$
 
+$macro: insert_into(name)$
+INSERT INTO `$(name)` ($expand: col, separator=","$) VALUES 
+$expand: tupel$ 
+$insert: delimiter$
+$end: insert_into$
+
+$macro: tupel$
+	($expand: values, separator=", "$)
+$end: tupel$
+
+$macro: values(literal)$
+$(literal)$no_eol$
+$end: values$
 
 $comment: ========== SQL demiliter ===== $
 

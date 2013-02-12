@@ -44,4 +44,40 @@ public class MySQLDMLComposerTest extends TestCase {
 				.getSQL();
 		System.out.println(sql);
 	}
+
+	/**
+	 * Test of createTable method, of class DDLComposer.
+	 */
+	@Test
+	public void testInsertIntoTableWithStringsValue() {
+		DMLComposer p = new MySQLDMLComposer();
+		List<String> values = new ArrayList<String>();
+		values.add("1"); values.add("2"); values.add("3"); values.add("4");
+		String sql = p.insertInto("aaaa", "x", "y", "z")
+				.value(values)
+				.value("11111","222222", "33333")
+				.value(values)
+				.getSQL();
+		System.out.println(sql);
+	}
+
+	/**
+	 * Test of createTable method, of class DDLComposer.
+	 */
+	@Test
+	public void testInsertIntoTableWithListValue() {
+		DMLComposer p = new MySQLDMLComposer();
+		List<String> values = new ArrayList<String>();
+		values.add("1"); values.add("2"); values.add("3"); values.add("4");
+		List<String> cols = new ArrayList<String>();
+		cols.add("x");
+		cols.add("y");
+		cols.add("z");
+		String sql = p.insertInto("aaaa", cols)
+				.value(values)
+				.value("11111","222222", "33333")
+				.value(values)
+				.getSQL();
+		System.out.println(sql);
+	}
 }

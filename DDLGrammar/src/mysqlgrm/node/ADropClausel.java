@@ -11,7 +11,7 @@ public final class ADropClausel extends PDropClausel
     private TTable _table_;
     private TIf _if_;
     private TExists _exists_;
-    private TIdentifier _identifier_;
+    private PIdentifierList _identifierList_;
 
     public ADropClausel()
     {
@@ -23,7 +23,7 @@ public final class ADropClausel extends PDropClausel
         @SuppressWarnings("hiding") TTable _table_,
         @SuppressWarnings("hiding") TIf _if_,
         @SuppressWarnings("hiding") TExists _exists_,
-        @SuppressWarnings("hiding") TIdentifier _identifier_)
+        @SuppressWarnings("hiding") PIdentifierList _identifierList_)
     {
         // Constructor
         setDrop(_drop_);
@@ -34,7 +34,7 @@ public final class ADropClausel extends PDropClausel
 
         setExists(_exists_);
 
-        setIdentifier(_identifier_);
+        setIdentifierList(_identifierList_);
 
     }
 
@@ -46,7 +46,7 @@ public final class ADropClausel extends PDropClausel
             cloneNode(this._table_),
             cloneNode(this._if_),
             cloneNode(this._exists_),
-            cloneNode(this._identifier_));
+            cloneNode(this._identifierList_));
     }
 
     @Override
@@ -155,16 +155,16 @@ public final class ADropClausel extends PDropClausel
         this._exists_ = node;
     }
 
-    public TIdentifier getIdentifier()
+    public PIdentifierList getIdentifierList()
     {
-        return this._identifier_;
+        return this._identifierList_;
     }
 
-    public void setIdentifier(TIdentifier node)
+    public void setIdentifierList(PIdentifierList node)
     {
-        if(this._identifier_ != null)
+        if(this._identifierList_ != null)
         {
-            this._identifier_.parent(null);
+            this._identifierList_.parent(null);
         }
 
         if(node != null)
@@ -177,7 +177,7 @@ public final class ADropClausel extends PDropClausel
             node.parent(this);
         }
 
-        this._identifier_ = node;
+        this._identifierList_ = node;
     }
 
     @Override
@@ -188,7 +188,7 @@ public final class ADropClausel extends PDropClausel
             + toString(this._table_)
             + toString(this._if_)
             + toString(this._exists_)
-            + toString(this._identifier_);
+            + toString(this._identifierList_);
     }
 
     @Override
@@ -219,9 +219,9 @@ public final class ADropClausel extends PDropClausel
             return;
         }
 
-        if(this._identifier_ == child)
+        if(this._identifierList_ == child)
         {
-            this._identifier_ = null;
+            this._identifierList_ = null;
             return;
         }
 
@@ -256,9 +256,9 @@ public final class ADropClausel extends PDropClausel
             return;
         }
 
-        if(this._identifier_ == oldChild)
+        if(this._identifierList_ == oldChild)
         {
-            setIdentifier((TIdentifier) newChild);
+            setIdentifierList((PIdentifierList) newChild);
             return;
         }
 

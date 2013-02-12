@@ -10,14 +10,14 @@ constraint `yyyy` primary key (a) ,
 constraint zzzz foreign key (a) references halloworld (xxx)
 );
 
-DroP TaBle If Exists `xxxxxx`;
+DroP TaBle If Exists `xxxxxx`, `yyyyy`;
 
 insert into `xxxxxxx` (`a`,`b`,`c`, d) values (1, "xyzt", @xxxxx, 1.10000);
 insert into `xxxxxxx` (`a`,`b`,`c`, d) values 
-		(1, "xyzt", @xxxxx, 1.10000)
-		(1, "xyzt", @xxxxx, 1.10000)
-		(1, "xyzt", @xxxxx, 1.10000)
-		(1, "xyzt", @xxxxx, 1.10000)
-		(1, "xyzt", @xxxxx, 1.10000)
-		(1, "xyzt", @xxxxx, 1.10000)
+		(1, "xyzt", @xxxxx, 1.10000),
+		(1, "xyzt", @xxxxx, 1.10000),
+		(1, "xyzt", @xxxxx, 1.10000),
+		(1, "xyzt", @xxxxx, 1.10000),
+		(1, "xyzt", @xxxxx, 1.10000),
+		(1, "xyzt", @xxxxx, 1.10000),
 		(1, "xyzt", @xxxxx, 1.10000) ;

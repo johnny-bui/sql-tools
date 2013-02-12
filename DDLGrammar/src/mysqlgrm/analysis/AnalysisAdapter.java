@@ -219,7 +219,7 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
-    public void caseACols(ACols node)
+    public void caseAIdentifierList(AIdentifierList node)
     {
         defaultCase(node);
     }
@@ -261,7 +261,19 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseAValueClauselList(AValueClauselList node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseAValueClausel(AValueClausel node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAMoreValueClausel(AMoreValueClausel node)
     {
         defaultCase(node);
     }

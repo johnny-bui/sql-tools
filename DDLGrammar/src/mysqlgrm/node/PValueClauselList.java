@@ -2,7 +2,7 @@
 
 package mysqlgrm.node;
 
-public abstract class PCols extends Node
+public abstract class PValueClauselList extends Node
 {
     // Empty body
 }

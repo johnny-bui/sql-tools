@@ -2,7 +2,6 @@
 
 package mysqlgrm.node;
 
-import java.util.*;
 import mysqlgrm.analysis.*;
 
 @SuppressWarnings("nls")
@@ -12,10 +11,10 @@ public final class AInsertClausel extends PInsertClausel
     private TInto _into_;
     private TIdentifier _identifier_;
     private TLPar _lTupelPar_;
-    private PCols _tupel_;
+    private PIdentifierList _tupel_;
     private TRPar _rTupelPar_;
     private TValues _values_;
-    private final LinkedList<PValueClausel> _valueClausel_ = new LinkedList<PValueClausel>();
+    private PValueClauselList _valueClauselList_;
 
     public AInsertClausel()
     {
@@ -27,10 +26,10 @@ public final class AInsertClausel extends PInsertClausel
         @SuppressWarnings("hiding") TInto _into_,
         @SuppressWarnings("hiding") TIdentifier _identifier_,
         @SuppressWarnings("hiding") TLPar _lTupelPar_,
-        @SuppressWarnings("hiding") PCols _tupel_,
+        @SuppressWarnings("hiding") PIdentifierList _tupel_,
         @SuppressWarnings("hiding") TRPar _rTupelPar_,
         @SuppressWarnings("hiding") TValues _values_,
-        @SuppressWarnings("hiding") List<?> _valueClausel_)
+        @SuppressWarnings("hiding") PValueClauselList _valueClauselList_)
     {
         // Constructor
         setInsert(_insert_);
@@ -47,7 +46,7 @@ public final class AInsertClausel extends PInsertClausel
 
         setValues(_values_);
 
-        setValueClausel(_valueClausel_);
+        setValueClauselList(_valueClauselList_);
 
     }
 
@@ -62,7 +61,7 @@ public final class AInsertClausel extends PInsertClausel
             cloneNode(this._tupel_),
             cloneNode(this._rTupelPar_),
             cloneNode(this._values_),
-            cloneList(this._valueClausel_));
+            cloneNode(this._valueClauselList_));
     }
 
     @Override
@@ -171,12 +170,12 @@ public final class AInsertClausel extends PInsertClausel
         this._lTupelPar_ = node;
     }
 
-    public PCols getTupel()
+    public PIdentifierList getTupel()
     {
         return this._tupel_;
     }
 
-    public void setTupel(PCols node)
+    public void setTupel(PIdentifierList node)
     {
         if(this._tupel_ != null)
         {
@@ -246,30 +245,29 @@ public final class AInsertClausel extends PInsertClausel
         this._values_ = node;
     }
 
-    public LinkedList<PValueClausel> getValueClausel()
+    public PValueClauselList getValueClauselList()
     {
-        return this._valueClausel_;
+        return this._valueClauselList_;
     }
 
-    public void setValueClausel(List<?> list)
+    public void setValueClauselList(PValueClauselList node)
     {
-        for(PValueClausel e : this._valueClausel_)
+        if(this._valueClauselList_ != null)
         {
-            e.parent(null);
+            this._valueClauselList_.parent(null);
         }
-        this._valueClausel_.clear();
 
-        for(Object obj_e : list)
+        if(node != null)
         {
-            PValueClausel e = (PValueClausel) obj_e;
-            if(e.parent() != null)
+            if(node.parent() != null)
             {
-                e.parent().removeChild(e);
+                node.parent().removeChild(node);
             }
 
-            e.parent(this);
-            this._valueClausel_.add(e);
+            node.parent(this);
         }
+
+        this._valueClauselList_ = node;
     }
 
     @Override
@@ -283,7 +281,7 @@ public final class AInsertClausel extends PInsertClausel
             + toString(this._tupel_)
             + toString(this._rTupelPar_)
             + toString(this._values_)
-            + toString(this._valueClausel_);
+            + toString(this._valueClauselList_);
     }
 
     @Override
@@ -332,8 +330,9 @@ public final class AInsertClausel extends PInsertClausel
             return;
         }
 
-        if(this._valueClausel_.remove(child))
+        if(this._valueClauselList_ == child)
         {
+            this._valueClauselList_ = null;
             return;
         }
 
@@ -370,7 +369,7 @@ public final class AInsertClausel extends PInsertClausel
 
         if(this._tupel_ == oldChild)
         {
-            setTupel((PCols) newChild);
+            setTupel((PIdentifierList) newChild);
             return;
         }
 
@@ -386,22 +385,10 @@ public final class AInsertClausel extends PInsertClausel
             return;
         }
 
-        for(ListIterator<PValueClausel> i = this._valueClausel_.listIterator(); i.hasNext();)
+        if(this._valueClauselList_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PValueClausel) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setValueClauselList((PValueClauselList) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");

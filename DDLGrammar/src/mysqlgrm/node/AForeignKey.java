@@ -12,7 +12,7 @@ public final class AForeignKey extends PForeignKey
     private TForeign _foreign_;
     private TKey _key_;
     private TLPar _lPar_;
-    private PCols _cols_;
+    private PIdentifierList _identifierList_;
     private TRPar _rPar_;
     private PReferencesClausel _referencesClausel_;
 
@@ -27,7 +27,7 @@ public final class AForeignKey extends PForeignKey
         @SuppressWarnings("hiding") TForeign _foreign_,
         @SuppressWarnings("hiding") TKey _key_,
         @SuppressWarnings("hiding") TLPar _lPar_,
-        @SuppressWarnings("hiding") PCols _cols_,
+        @SuppressWarnings("hiding") PIdentifierList _identifierList_,
         @SuppressWarnings("hiding") TRPar _rPar_,
         @SuppressWarnings("hiding") PReferencesClausel _referencesClausel_)
     {
@@ -42,7 +42,7 @@ public final class AForeignKey extends PForeignKey
 
         setLPar(_lPar_);
 
-        setCols(_cols_);
+        setIdentifierList(_identifierList_);
 
         setRPar(_rPar_);
 
@@ -59,7 +59,7 @@ public final class AForeignKey extends PForeignKey
             cloneNode(this._foreign_),
             cloneNode(this._key_),
             cloneNode(this._lPar_),
-            cloneNode(this._cols_),
+            cloneNode(this._identifierList_),
             cloneNode(this._rPar_),
             cloneNode(this._referencesClausel_));
     }
@@ -195,16 +195,16 @@ public final class AForeignKey extends PForeignKey
         this._lPar_ = node;
     }
 
-    public PCols getCols()
+    public PIdentifierList getIdentifierList()
     {
-        return this._cols_;
+        return this._identifierList_;
     }
 
-    public void setCols(PCols node)
+    public void setIdentifierList(PIdentifierList node)
     {
-        if(this._cols_ != null)
+        if(this._identifierList_ != null)
         {
-            this._cols_.parent(null);
+            this._identifierList_.parent(null);
         }
 
         if(node != null)
@@ -217,7 +217,7 @@ public final class AForeignKey extends PForeignKey
             node.parent(this);
         }
 
-        this._cols_ = node;
+        this._identifierList_ = node;
     }
 
     public TRPar getRPar()
@@ -279,7 +279,7 @@ public final class AForeignKey extends PForeignKey
             + toString(this._foreign_)
             + toString(this._key_)
             + toString(this._lPar_)
-            + toString(this._cols_)
+            + toString(this._identifierList_)
             + toString(this._rPar_)
             + toString(this._referencesClausel_);
     }
@@ -318,9 +318,9 @@ public final class AForeignKey extends PForeignKey
             return;
         }
 
-        if(this._cols_ == child)
+        if(this._identifierList_ == child)
         {
-            this._cols_ = null;
+            this._identifierList_ = null;
             return;
         }
 
@@ -373,9 +373,9 @@ public final class AForeignKey extends PForeignKey
             return;
         }
 
-        if(this._cols_ == oldChild)
+        if(this._identifierList_ == oldChild)
         {
-            setCols((PCols) newChild);
+            setIdentifierList((PIdentifierList) newChild);
             return;
         }
 

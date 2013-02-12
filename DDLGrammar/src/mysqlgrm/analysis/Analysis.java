@@ -36,14 +36,16 @@ public interface Analysis extends Switch
     void caseATableConstraintTail(ATableConstraintTail node);
     void caseAPrimaryKey(APrimaryKey node);
     void caseAForeignKey(AForeignKey node);
-    void caseACols(ACols node);
+    void caseAIdentifierList(AIdentifierList node);
     void caseAMoreIdentifier(AMoreIdentifier node);
     void caseAReferencesClausel(AReferencesClausel node);
     void caseADropClausel(ADropClausel node);
     void caseATruncateClausel(ATruncateClausel node);
     void caseADml(ADml node);
     void caseAInsertClausel(AInsertClausel node);
+    void caseAValueClauselList(AValueClauselList node);
     void caseAValueClausel(AValueClausel node);
+    void caseAMoreValueClausel(AMoreValueClausel node);
     void caseAValues(AValues node);
     void caseAVarSingleValue(AVarSingleValue node);
     void caseAIntSingleValue(AIntSingleValue node);

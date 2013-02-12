@@ -677,9 +677,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getRPar().apply(this);
         }
-        if(node.getCols() != null)
+        if(node.getIdentifierList() != null)
         {
-            node.getCols().apply(this);
+            node.getIdentifierList().apply(this);
         }
         if(node.getLPar() != null)
         {
@@ -704,20 +704,20 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAForeignKey(node);
     }
 
-    public void inACols(ACols node)
+    public void inAIdentifierList(AIdentifierList node)
     {
         defaultIn(node);
     }
 
-    public void outACols(ACols node)
+    public void outAIdentifierList(AIdentifierList node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseACols(ACols node)
+    public void caseAIdentifierList(AIdentifierList node)
     {
-        inACols(node);
+        inAIdentifierList(node);
         {
             List<PMoreIdentifier> copy = new ArrayList<PMoreIdentifier>(node.getMoreIdentifier());
             Collections.reverse(copy);
@@ -730,7 +730,7 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getIdentifier().apply(this);
         }
-        outACols(node);
+        outAIdentifierList(node);
     }
 
     public void inAMoreIdentifier(AMoreIdentifier node)
@@ -776,9 +776,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getRPar().apply(this);
         }
-        if(node.getCols() != null)
+        if(node.getIdentifierList() != null)
         {
-            node.getCols().apply(this);
+            node.getIdentifierList().apply(this);
         }
         if(node.getLPar() != null)
         {
@@ -809,9 +809,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseADropClausel(ADropClausel node)
     {
         inADropClausel(node);
-        if(node.getIdentifier() != null)
+        if(node.getIdentifierList() != null)
         {
-            node.getIdentifier().apply(this);
+            node.getIdentifierList().apply(this);
         }
         if(node.getExists() != null)
         {
@@ -900,13 +900,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAInsertClausel(AInsertClausel node)
     {
         inAInsertClausel(node);
+        if(node.getValueClauselList() != null)
         {
-            List<PValueClausel> copy = new ArrayList<PValueClausel>(node.getValueClausel());
-            Collections.reverse(copy);
-            for(PValueClausel e : copy)
-            {
-                e.apply(this);
-            }
+            node.getValueClauselList().apply(this);
         }
         if(node.getValues() != null)
         {
@@ -939,6 +935,35 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAInsertClausel(node);
     }
 
+    public void inAValueClauselList(AValueClauselList node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAValueClauselList(AValueClauselList node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAValueClauselList(AValueClauselList node)
+    {
+        inAValueClauselList(node);
+        {
+            List<PMoreValueClausel> copy = new ArrayList<PMoreValueClausel>(node.getMoreValueClausel());
+            Collections.reverse(copy);
+            for(PMoreValueClausel e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        if(node.getValueClausel() != null)
+        {
+            node.getValueClausel().apply(this);
+        }
+        outAValueClauselList(node);
+    }
+
     public void inAValueClausel(AValueClausel node)
     {
         defaultIn(node);
@@ -966,6 +991,31 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             node.getLValuePar().apply(this);
         }
         outAValueClausel(node);
+    }
+
+    public void inAMoreValueClausel(AMoreValueClausel node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAMoreValueClausel(AMoreValueClausel node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAMoreValueClausel(AMoreValueClausel node)
+    {
+        inAMoreValueClausel(node);
+        if(node.getValueClausel() != null)
+        {
+            node.getValueClausel().apply(this);
+        }
+        if(node.getComma() != null)
+        {
+            node.getComma().apply(this);
+        }
+        outAMoreValueClausel(node);
     }
 
     public void inAValues(AValues node)

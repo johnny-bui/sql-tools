@@ -150,16 +150,16 @@ Productions
 		comma table_constraint;
 
 	primary_key = constraint [name]:identifier primary key l_par [col]:identifier r_par;
-	foreign_key = constraint [name]:identifier foreign key l_par cols r_par references_clausel;
+	foreign_key = constraint [name]:identifier foreign key l_par identifier_list r_par references_clausel;
 	
-	cols = identifier more_identifier*;
+	identifier_list = identifier more_identifier*;
 	more_identifier = comma identifier;
 	
 	references_clausel = 
-		references identifier l_par cols r_par;
+		references identifier l_par identifier_list r_par;
 
 ////////////////////////////////////////////////////////////////////////////////
-	drop_clausel = drop table if exists identifier ;
+	drop_clausel = drop table? if exists identifier_list ;
 
 ////////////////////////////////////////////////////////////////////////////////
 	truncate_clausel = truncate table identifier;	
@@ -168,10 +168,12 @@ Productions
 	dml = insert_clausel semicolon;
 
 	insert_clausel = insert into identifier 
-			[l_tupel_par]:l_par [tupel]:cols [r_tupel_par]:r_par 
-			T.values value_clausel+;
+			[l_tupel_par]:l_par [tupel]:identifier_list [r_tupel_par]:r_par 
+			T.values value_clausel_list;
 
+	value_clausel_list = value_clausel more_value_clausel*;
 	value_clausel =  [l_value_par]:l_par [value]:P.values [r_value_par]:r_par;
+	more_value_clausel = comma value_clausel;
 
 	values = single_value more_single_value*;
 	single_value = 

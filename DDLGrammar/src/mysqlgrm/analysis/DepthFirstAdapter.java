@@ -683,9 +683,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getLPar().apply(this);
         }
-        if(node.getCols() != null)
+        if(node.getIdentifierList() != null)
         {
-            node.getCols().apply(this);
+            node.getIdentifierList().apply(this);
         }
         if(node.getRPar() != null)
         {
@@ -698,20 +698,20 @@ public class DepthFirstAdapter extends AnalysisAdapter
         outAForeignKey(node);
     }
 
-    public void inACols(ACols node)
+    public void inAIdentifierList(AIdentifierList node)
     {
         defaultIn(node);
     }
 
-    public void outACols(ACols node)
+    public void outAIdentifierList(AIdentifierList node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseACols(ACols node)
+    public void caseAIdentifierList(AIdentifierList node)
     {
-        inACols(node);
+        inAIdentifierList(node);
         if(node.getIdentifier() != null)
         {
             node.getIdentifier().apply(this);
@@ -723,7 +723,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
                 e.apply(this);
             }
         }
-        outACols(node);
+        outAIdentifierList(node);
     }
 
     public void inAMoreIdentifier(AMoreIdentifier node)
@@ -777,9 +777,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getLPar().apply(this);
         }
-        if(node.getCols() != null)
+        if(node.getIdentifierList() != null)
         {
-            node.getCols().apply(this);
+            node.getIdentifierList().apply(this);
         }
         if(node.getRPar() != null)
         {
@@ -818,9 +818,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getExists().apply(this);
         }
-        if(node.getIdentifier() != null)
+        if(node.getIdentifierList() != null)
         {
-            node.getIdentifier().apply(this);
+            node.getIdentifierList().apply(this);
         }
         outADropClausel(node);
     }
@@ -921,14 +921,39 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getValues().apply(this);
         }
+        if(node.getValueClauselList() != null)
         {
-            List<PValueClausel> copy = new ArrayList<PValueClausel>(node.getValueClausel());
-            for(PValueClausel e : copy)
+            node.getValueClauselList().apply(this);
+        }
+        outAInsertClausel(node);
+    }
+
+    public void inAValueClauselList(AValueClauselList node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAValueClauselList(AValueClauselList node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAValueClauselList(AValueClauselList node)
+    {
+        inAValueClauselList(node);
+        if(node.getValueClausel() != null)
+        {
+            node.getValueClausel().apply(this);
+        }
+        {
+            List<PMoreValueClausel> copy = new ArrayList<PMoreValueClausel>(node.getMoreValueClausel());
+            for(PMoreValueClausel e : copy)
             {
                 e.apply(this);
             }
         }
-        outAInsertClausel(node);
+        outAValueClauselList(node);
     }
 
     public void inAValueClausel(AValueClausel node)
@@ -958,6 +983,31 @@ public class DepthFirstAdapter extends AnalysisAdapter
             node.getRValuePar().apply(this);
         }
         outAValueClausel(node);
+    }
+
+    public void inAMoreValueClausel(AMoreValueClausel node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAMoreValueClausel(AMoreValueClausel node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAMoreValueClausel(AMoreValueClausel node)
+    {
+        inAMoreValueClausel(node);
+        if(node.getComma() != null)
+        {
+            node.getComma().apply(this);
+        }
+        if(node.getValueClausel() != null)
+        {
+            node.getValueClausel().apply(this);
+        }
+        outAMoreValueClausel(node);
     }
 
     public void inAValues(AValues node)

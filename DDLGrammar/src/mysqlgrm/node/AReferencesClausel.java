@@ -10,7 +10,7 @@ public final class AReferencesClausel extends PReferencesClausel
     private TReferences _references_;
     private TIdentifier _identifier_;
     private TLPar _lPar_;
-    private PCols _cols_;
+    private PIdentifierList _identifierList_;
     private TRPar _rPar_;
 
     public AReferencesClausel()
@@ -22,7 +22,7 @@ public final class AReferencesClausel extends PReferencesClausel
         @SuppressWarnings("hiding") TReferences _references_,
         @SuppressWarnings("hiding") TIdentifier _identifier_,
         @SuppressWarnings("hiding") TLPar _lPar_,
-        @SuppressWarnings("hiding") PCols _cols_,
+        @SuppressWarnings("hiding") PIdentifierList _identifierList_,
         @SuppressWarnings("hiding") TRPar _rPar_)
     {
         // Constructor
@@ -32,7 +32,7 @@ public final class AReferencesClausel extends PReferencesClausel
 
         setLPar(_lPar_);
 
-        setCols(_cols_);
+        setIdentifierList(_identifierList_);
 
         setRPar(_rPar_);
 
@@ -45,7 +45,7 @@ public final class AReferencesClausel extends PReferencesClausel
             cloneNode(this._references_),
             cloneNode(this._identifier_),
             cloneNode(this._lPar_),
-            cloneNode(this._cols_),
+            cloneNode(this._identifierList_),
             cloneNode(this._rPar_));
     }
 
@@ -130,16 +130,16 @@ public final class AReferencesClausel extends PReferencesClausel
         this._lPar_ = node;
     }
 
-    public PCols getCols()
+    public PIdentifierList getIdentifierList()
     {
-        return this._cols_;
+        return this._identifierList_;
     }
 
-    public void setCols(PCols node)
+    public void setIdentifierList(PIdentifierList node)
     {
-        if(this._cols_ != null)
+        if(this._identifierList_ != null)
         {
-            this._cols_.parent(null);
+            this._identifierList_.parent(null);
         }
 
         if(node != null)
@@ -152,7 +152,7 @@ public final class AReferencesClausel extends PReferencesClausel
             node.parent(this);
         }
 
-        this._cols_ = node;
+        this._identifierList_ = node;
     }
 
     public TRPar getRPar()
@@ -187,7 +187,7 @@ public final class AReferencesClausel extends PReferencesClausel
             + toString(this._references_)
             + toString(this._identifier_)
             + toString(this._lPar_)
-            + toString(this._cols_)
+            + toString(this._identifierList_)
             + toString(this._rPar_);
     }
 
@@ -213,9 +213,9 @@ public final class AReferencesClausel extends PReferencesClausel
             return;
         }
 
-        if(this._cols_ == child)
+        if(this._identifierList_ == child)
         {
-            this._cols_ = null;
+            this._identifierList_ = null;
             return;
         }
 
@@ -250,9 +250,9 @@ public final class AReferencesClausel extends PReferencesClausel
             return;
         }
 
-        if(this._cols_ == oldChild)
+        if(this._identifierList_ == oldChild)
         {
-            setCols((PCols) newChild);
+            setIdentifierList((PIdentifierList) newChild);
             return;
         }
 

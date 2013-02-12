@@ -6,51 +6,51 @@ import java.util.*;
 import mysqlgrm.analysis.*;
 
 @SuppressWarnings("nls")
-public final class ACols extends PCols
+public final class AValueClauselList extends PValueClauselList
 {
-    private TIdentifier _identifier_;
-    private final LinkedList<PMoreIdentifier> _moreIdentifier_ = new LinkedList<PMoreIdentifier>();
+    private PValueClausel _valueClausel_;
+    private final LinkedList<PMoreValueClausel> _moreValueClausel_ = new LinkedList<PMoreValueClausel>();
 
-    public ACols()
+    public AValueClauselList()
     {
         // Constructor
     }
 
-    public ACols(
-        @SuppressWarnings("hiding") TIdentifier _identifier_,
-        @SuppressWarnings("hiding") List<?> _moreIdentifier_)
+    public AValueClauselList(
+        @SuppressWarnings("hiding") PValueClausel _valueClausel_,
+        @SuppressWarnings("hiding") List<?> _moreValueClausel_)
     {
         // Constructor
-        setIdentifier(_identifier_);
+        setValueClausel(_valueClausel_);
 
-        setMoreIdentifier(_moreIdentifier_);
+        setMoreValueClausel(_moreValueClausel_);
 
     }
 
     @Override
     public Object clone()
     {
-        return new ACols(
-            cloneNode(this._identifier_),
-            cloneList(this._moreIdentifier_));
+        return new AValueClauselList(
+            cloneNode(this._valueClausel_),
+            cloneList(this._moreValueClausel_));
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseACols(this);
+        ((Analysis) sw).caseAValueClauselList(this);
     }
 
-    public TIdentifier getIdentifier()
+    public PValueClausel getValueClausel()
     {
-        return this._identifier_;
+        return this._valueClausel_;
     }
 
-    public void setIdentifier(TIdentifier node)
+    public void setValueClausel(PValueClausel node)
     {
-        if(this._identifier_ != null)
+        if(this._valueClausel_ != null)
         {
-            this._identifier_.parent(null);
+            this._valueClausel_.parent(null);
         }
 
         if(node != null)
@@ -63,32 +63,32 @@ public final class ACols extends PCols
             node.parent(this);
         }
 
-        this._identifier_ = node;
+        this._valueClausel_ = node;
     }
 
-    public LinkedList<PMoreIdentifier> getMoreIdentifier()
+    public LinkedList<PMoreValueClausel> getMoreValueClausel()
     {
-        return this._moreIdentifier_;
+        return this._moreValueClausel_;
     }
 
-    public void setMoreIdentifier(List<?> list)
+    public void setMoreValueClausel(List<?> list)
     {
-        for(PMoreIdentifier e : this._moreIdentifier_)
+        for(PMoreValueClausel e : this._moreValueClausel_)
         {
             e.parent(null);
         }
-        this._moreIdentifier_.clear();
+        this._moreValueClausel_.clear();
 
         for(Object obj_e : list)
         {
-            PMoreIdentifier e = (PMoreIdentifier) obj_e;
+            PMoreValueClausel e = (PMoreValueClausel) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
-            this._moreIdentifier_.add(e);
+            this._moreValueClausel_.add(e);
         }
     }
 
@@ -96,21 +96,21 @@ public final class ACols extends PCols
     public String toString()
     {
         return ""
-            + toString(this._identifier_)
-            + toString(this._moreIdentifier_);
+            + toString(this._valueClausel_)
+            + toString(this._moreValueClausel_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._identifier_ == child)
+        if(this._valueClausel_ == child)
         {
-            this._identifier_ = null;
+            this._valueClausel_ = null;
             return;
         }
 
-        if(this._moreIdentifier_.remove(child))
+        if(this._moreValueClausel_.remove(child))
         {
             return;
         }
@@ -122,19 +122,19 @@ public final class ACols extends PCols
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._identifier_ == oldChild)
+        if(this._valueClausel_ == oldChild)
         {
-            setIdentifier((TIdentifier) newChild);
+            setValueClausel((PValueClausel) newChild);
             return;
         }
 
-        for(ListIterator<PMoreIdentifier> i = this._moreIdentifier_.listIterator(); i.hasNext();)
+        for(ListIterator<PMoreValueClausel> i = this._moreValueClausel_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set((PMoreIdentifier) newChild);
+                    i.set((PMoreValueClausel) newChild);
                     newChild.parent(this);
                     oldChild.parent(null);
                     return;

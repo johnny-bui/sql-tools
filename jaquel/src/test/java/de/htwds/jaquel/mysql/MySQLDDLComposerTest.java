@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
+import sqlgrammar.SQLGrammar;
 
 /**
  *
@@ -51,19 +52,22 @@ public class MySQLDDLComposerTest extends TestCase {
 				.column("dummy", "float")
 				.getSQL();
 		System.out.println(constraintFirst);
+		SQLGrammar.checkSyntax(constraintFirst);
 		
 		String constraintSecond = p.createTable("columnConstraint2")
 				.column("dummy", "float")
 				.column("column", "integer").unique().notNull()
 				.getSQL();
 		System.out.println(constraintSecond);
-
+		SQLGrammar.checkSyntax(constraintSecond);
+				
 		String constraintMiddle = p.createTable("thirdConstraint")
 				.column("first", "text")
 				.column("seconde", "varchar(1000)").unique().notNull()
 				.column("third", "interger").autoIncrement()
 				.getSQL();
 		System.err.println(constraintMiddle);
+		SQLGrammar.checkSyntax(constraintMiddle);
 	}
 	
 	@Test

@@ -149,6 +149,13 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+	 <dependency>
+	  <groupId>de.htwds</groupId>
+	  <artifactId>SQLComposer</artifactId>
+	  <version>0.1-beta-0</version>
+	  <scope>test</scope>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 	<distributionManagement>
 		<repository>

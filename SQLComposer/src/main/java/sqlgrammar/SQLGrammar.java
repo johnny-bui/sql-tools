@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
+import java.io.StringReader;
 import mysqlgrm.lexer.Lexer;
 import mysqlgrm.lexer.LexerException;
 import mysqlgrm.parser.Parser;
@@ -17,12 +18,12 @@ import mysqlgrm.parser.ParserException;
  *
  * @author hbui
  */
-public class DDLGrammar {
+public class SQLGrammar {
 
 	
 	public static void main(String[] args) {
 		try {
-			InputStream resourceAsStream = DDLGrammar.class.getResourceAsStream("testfile.sql");
+			InputStream resourceAsStream = SQLGrammar.class.getResourceAsStream("testfile.sql");
 			Lexer l = new Lexer(new PushbackReader( new InputStreamReader(resourceAsStream) ));
 			Parser p = new Parser(l);
 			p.parse();
@@ -37,6 +38,21 @@ public class DDLGrammar {
 		} catch (IOException ex) {
 			System.err.println(ex);
 			ex.printStackTrace();
+		}
+		System.out.println("RUN SUCCESS!!!");
+	}
+
+	public static void checkSyntax(String sqlString) throws RuntimeException{
+		try {
+			Lexer l = new Lexer(new PushbackReader( new StringReader(sqlString) ));
+			Parser p = new Parser(l);
+			p.parse();
+		} catch (ParserException ex) {
+			throw new RuntimeException(ex);
+		} catch (LexerException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
 		}
 	}
 }

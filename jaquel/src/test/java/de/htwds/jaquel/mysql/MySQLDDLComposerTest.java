@@ -82,6 +82,7 @@ public class MySQLDDLComposerTest extends TestCase {
 					primaryKey("c1")
 				.getSQL();
 		System.out.println(simpleTableConstraint);
+		SQLGrammar.checkSyntax(simpleTableConstraint);
 		
 		String tableDualPrimaryKey = p.createTable("constraintTab")
 				.column("c1", "bigint")
@@ -91,6 +92,7 @@ public class MySQLDDLComposerTest extends TestCase {
 					primaryKey("c1", "bbb")
 				.getSQL();
 		System.out.println(tableDualPrimaryKey);
+		SQLGrammar.checkSyntax(tableDualPrimaryKey);
 		
 		String twoRulesTable = p.createTable("twoRule")
 				.column("id", "bigint")
@@ -114,6 +116,7 @@ public class MySQLDDLComposerTest extends TestCase {
 				.constraint("r1").primaryKey(refCols)
 				.getSQL();
 		System.out.println(twoRulesInListTable);
+		SQLGrammar.checkSyntax(twoRulesTable);
 	}
 	
 	public void testTableWithTableConstraint2(){
@@ -127,6 +130,7 @@ public class MySQLDDLComposerTest extends TestCase {
 					primaryKey("c1", "bbb")
 				.getSQL();
 		System.out.println(tableDualPrimaryKey);
+		SQLGrammar.checkSyntax(tableDualPrimaryKey);
 		
 		String twoRulesTable = p.createTable("twoRule")
 				.column("id", "bigint")
@@ -137,6 +141,7 @@ public class MySQLDDLComposerTest extends TestCase {
 						.references("constraintTab","c1","bbb","c2")
 				.getSQL();
 		System.out.println(twoRulesTable);
+		SQLGrammar.checkSyntax(twoRulesTable);
 
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
@@ -151,6 +156,7 @@ public class MySQLDDLComposerTest extends TestCase {
 					.references("xxxx", refCols)
 				.getSQL();
 		System.out.println(twoRulesInListTable);
+		SQLGrammar.checkSyntax(twoRulesInListTable);
 		
 		String threeRulesInListTable = p.createTable("twoRule")
 				.column("id", "bigint")
@@ -161,6 +167,7 @@ public class MySQLDDLComposerTest extends TestCase {
 				.constraint("r3").primaryKey(refCols)
 				.getSQL();
 		System.out.println(threeRulesInListTable);
+		SQLGrammar.checkSyntax(threeRulesInListTable);
 	}
 
 	@Test
@@ -179,7 +186,7 @@ public class MySQLDDLComposerTest extends TestCase {
 						.references("xxxx", "a","b", "c", "d")
 					.constraint("r3").primaryKey(refCols)
 					.getSQL();
-			System.out.println(threeRulesInListTable);
+			//System.out.println(threeRulesInListTable);
 			fail("expected an runtime exception because the columns do not match");
 		}catch (RuntimeException ex){
 			// all OK
@@ -210,7 +217,7 @@ public class MySQLDDLComposerTest extends TestCase {
 						.references("xxxx", refCols2)
 					.constraint("r3").primaryKey(refCols)
 					.getSQL();
-			System.out.println(threeRulesInListTable);
+			//System.out.println(threeRulesInListTable);
 			fail("expected an runtime exception because the columns do not match");
 		}catch (RuntimeException ex){
 			// all OK
@@ -236,7 +243,7 @@ public class MySQLDDLComposerTest extends TestCase {
 						.references("xxxx", "yyyy")
 					.constraint("r3").primaryKey(refCols)
 					.getSQL();
-			System.out.println(threeRulesInListTable);
+			//System.out.println(threeRulesInListTable);
 			fail("expected an runtime exception because the columns do not match");
 		}catch (RuntimeException ex){
 			// all OK
@@ -249,6 +256,7 @@ public class MySQLDDLComposerTest extends TestCase {
 		DDLComposer p = new MySQLComposer();
 		String sql = p.dropTable("xxxxxx").getSQL();
 		System.out.println(sql);
+		SQLGrammar.checkSyntax(sql);
 	}
 	
 	@Test
@@ -256,6 +264,7 @@ public class MySQLDDLComposerTest extends TestCase {
 		DDLComposer p = new MySQLComposer();
 		String sql = p.truncateTable("xxxxx").getSQL();
 		System.out.println(sql);
+		SQLGrammar.checkSyntax(sql);
 	}
 
 }

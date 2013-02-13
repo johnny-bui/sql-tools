@@ -7,7 +7,7 @@
 	<version>0.1-beta-0</version>
 	<packaging>jar</packaging>
 
-	<name>SQLComposer</name>
+	<name>SQL Checker</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

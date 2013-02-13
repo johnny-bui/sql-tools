@@ -166,7 +166,7 @@ Productions
 	table_constraint_tail = 
 		comma table_constraint;
 
-	primary_key = constraint [name]:identifier primary key l_par [col]:identifier r_par;
+	primary_key = constraint [name]:identifier primary key l_par [col]:identifier_list r_par;
 	foreign_key = constraint [name]:identifier foreign key l_par identifier_list r_par references_clausel;
 	
 	identifier_list = identifier more_identifier*;

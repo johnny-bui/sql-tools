@@ -1,3 +1,12 @@
+CREATE TABLE `constraintTab` (
+	`c1` bigint  ,
+	`bbb` bigint  NOT NULL  UNIQUE,
+	`c2` varchar(5000)  ,
+	CONSTRAINT `rule_one` 
+		PRIMARY KEY(`c1`, `bbb`) 
+)ENGINE=InnoDB DEFAULT CHARACTER SET=utf8  ;
+
+
 CREATE TABLE IF NOT     EXISTS `halloworld` (
 	`xxx` varchar(40) not null unique,
 	`yyyy` integer

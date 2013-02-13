@@ -10,13 +10,20 @@ $comment: ========= create_table ===== $
 $comment: ============================ $
 
 $macro: create_table(name)$
-CREATE TABLE IF NOT EXISTS `$name` (
+CREATE TABLE `$name` (
 $expand: create_column, separator=",\n"$
 $expand: constraints, separator=",\n", before_first=",\n" $
 
 )$insert: table_option$ $insert: delimiter$
 $end: create_table$
 
+$macro: create_table_if_not_exists(name)$
+CREATE TABLE IF NOT EXISTS `$name` (
+$expand: create_column, separator=",\n"$
+$expand: constraints, separator=",\n", before_first=",\n" $
+
+)$insert: table_option$ $insert: delimiter$
+$end: create_table_if_not_exists$
 
 $comment: ========== create_column ==== $
 

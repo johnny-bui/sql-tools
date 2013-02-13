@@ -64,7 +64,7 @@ public class MySQLDDLComposerTest extends TestCase {
 		String constraintMiddle = p.createTable("thirdConstraint")
 				.column("first", "text")
 				.column("seconde", "varchar(1000)").unique().notNull()
-				.column("third", "interger").autoIncrement()
+				.column("third", "integer").autoIncrement()
 				.getSQL();
 		System.err.println(constraintMiddle);
 		SQLGrammar.checkSyntax(constraintMiddle);

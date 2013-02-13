@@ -48,11 +48,11 @@ public class SQLGrammar {
 			Parser p = new Parser(l);
 			p.parse();
 		} catch (ParserException ex) {
-			throw new RuntimeException(ex);
+			throw new RuntimeException(ex.getMessage() + "\n" + sqlString, ex);
 		} catch (LexerException ex) {
-			throw new RuntimeException(ex);
+			throw new RuntimeException(ex.getMessage() + "\n" + sqlString , ex);
 		} catch (IOException ex) {
-			throw new RuntimeException(ex);
+			throw new RuntimeException(ex.getMessage() + "\n" + sqlString  , ex);
 		}
 	}
 }

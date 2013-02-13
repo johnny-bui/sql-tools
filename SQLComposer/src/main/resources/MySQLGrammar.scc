@@ -37,12 +37,16 @@ Helpers
 	y = 'y'|'Y';
 	z = 'z'|'Z';
 	backquote = '`';
+	
 	cr  = 0x000d;
 	lf  = 0x000a;
 
 	number = ['0' .. '9']+;
 	dot = '.';
 	at = '@';
+
+	engine = e n g i n e;
+	type = t y p e ;
 
 	escape_sequence = '\b' | '\t' | '\n' | '\f' | '\r' | '\"' | '\' ''' | '\\' ;
 	unicode_input_character = [0..0xffff];
@@ -58,6 +62,7 @@ Tokens
 	r_par = ')';
 	comma = ',';
 	semicolon = ';';
+	equal = '=';
 	floating_point_number = digit+ dot digit*;
 	integer_number = number;
 
@@ -68,6 +73,7 @@ Tokens
 	float = f l o a t;
 	timestamp = t i m e s t a m p ;
 	varchar = v a r c h a r;
+	text = t e x t;
 		// KW in create table statement
 	create = c r e a t e;
 	table = t a b l e;
@@ -82,6 +88,10 @@ Tokens
 	not = n o t;
 	null = n u l l;	
 	references = r e f e r e n c e s;	
+	default = d e f a u l t;
+	character = c h a r a c t e r;
+	set = s e t;
+	auto_increment = a u t o '_' i n c r e m e n t;
 		// KW in drop table statement
 	drop = d r o p;
 		// KW in truncate table statement
@@ -92,6 +102,11 @@ Tokens
 	values = v a l u e | v a l u e s ;
 	
 
+	auto = a u t o ;
+	increment = i n c r e m e n t;
+	my_isam = 'MyISAM';
+	inno_db = 'InnoDB';	
+	table_type= engine | type;
 	blank = (' ' | 13 | 10 | 9)+;
 	var = at letter_or_digit+;
 
@@ -116,26 +131,28 @@ Productions
 		| {drop} drop_clausel semicolon;
 
 /////////////////////////////////////////////////////////////////////////////////////	
-	create_clausel = create table if not exists identifier table_definition ;
-	
+	create_clausel = create table if_not_exists? identifier table_definition table_option*;
+
+	if_not_exists = if not exists;
+
 	table_definition =
 		l_par col_def addition_col_def* table_constraint_tail* r_par;
 	
-	col_def = identifier type col_constraint*;
+	col_def = identifier data_type col_constraint*;
 
-	type = 
+	data_type = 
 		 {int} integer 
 		|{bigint} bigint 
 		|{float} float 
 		|{timestamp} timestamp 
+		|{text} text
 		|{chars} varchar l_par integer_number+ r_par;
 	
 	col_constraint = 
 		 {unique} unique
-		|{not_null} not_null
-		;	
+		|{not_null} not null
+		|{auto_increment} auto_increment;
 
-	not_null = not null;
 
 	addition_col_def = comma col_def;
 
@@ -157,6 +174,15 @@ Productions
 	
 	references_clausel = 
 		references identifier l_par identifier_list r_par;
+	
+	table_option =
+		{type} table_type equal? engine_name
+		|{char_set} default_character_set equal? identifier
+		|{auto_increment} auto_increment equal? integer_number;
+			
+	engine_name = {my_isam} T.my_isam | {inno_db} T.inno_db;
+	default_character_set = default character set;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 	drop_clausel = drop table? if exists identifier_list ;

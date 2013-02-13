@@ -1,6 +1,12 @@
-CREATE TABLE IF NOT EXISTS `halloworld` (
+CREATE TABLE IF NOT     EXISTS `halloworld` (
 	`xxx` varchar(40) not null unique,
 	`yyyy` integer
+)ENGINE=InnoDB DEFAULT CHARACTER SET=utf8  ;
+
+CREATE TABLE  `halloworld` (
+	`xxx` varchar(40) not null unique,
+	`yyyy` integer AUTO_INCREMENT ,
+	`zzz` text
 );
 
 CREATE TABLE IF NOT EXISTS h (
@@ -8,7 +14,7 @@ CREATE TABLE IF NOT EXISTS h (
 	`b` integer,
 constraint `yyyy` primary key (a) ,
 constraint zzzz foreign key (a) references halloworld (xxx)
-);
+)auto_increment = 0123456;
 
 DroP TaBle If Exists `xxxxxx`, `yyyyy`;
 

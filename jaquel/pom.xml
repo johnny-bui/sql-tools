@@ -151,7 +151,7 @@
 		</dependency>
 	 <dependency>
 	  <groupId>de.htwds</groupId>
-	  <artifactId>SQLComposer</artifactId>
+	  <artifactId>SQLChecker</artifactId>
 	  <version>0.1-beta-0</version>
 	  <scope>test</scope>
 	  <type>jar</type>

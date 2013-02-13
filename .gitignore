@@ -1,1 +1,5 @@
 /jaquel/target/
+/DDLGrammar/dist/
+/sablecc-maven-plugin/target/
+/sablecc-maven-plugin-test/target/
+/SQLComposer/target/

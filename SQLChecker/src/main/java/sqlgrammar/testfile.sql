@@ -36,3 +36,7 @@ insert into `xxxxxxx` (`a`,`b`,`c`, d) values
 		(1, "xyzt", @xxxxx, 1.10000),
 		(1, "xyzt", @xxxxx, 1.10000),
 		(1, "xyzt", @xxxxx, 1.10000) ;
+
+
+delete from `xxxxx`;
+delete from `xxxxx`, yyyyy, `zzzz`;

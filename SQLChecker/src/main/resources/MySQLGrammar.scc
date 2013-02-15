@@ -100,7 +100,8 @@ Tokens
 	insert = i n s e r t;
 	into = i n t o;
 	values = v a l u e | v a l u e s ;
-	
+	delete = d e l e t e;
+	from = f r o m;
 
 	auto = a u t o ;
 	increment = i n c r e m e n t;
@@ -191,7 +192,9 @@ Productions
 	truncate_clausel = truncate table identifier;	
 
 /* Data manipulation language */
-	dml = insert_clausel semicolon;
+	dml = 
+		{insert} insert_clausel semicolon
+		|{delete} delete_clausel semicolon;
 
 	insert_clausel = insert into identifier 
 			[l_tupel_par]:l_par [tupel]:identifier_list [r_tupel_par]:r_par 
@@ -210,4 +213,4 @@ Productions
 	
 	more_single_value = comma single_value;		
 
-
+	delete_clausel = delete from identifier_list;

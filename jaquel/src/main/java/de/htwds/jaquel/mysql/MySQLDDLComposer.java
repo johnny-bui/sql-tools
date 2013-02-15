@@ -1,15 +1,17 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.Column;
+import de.htwds.jaquel.CreateTable;
 import de.htwds.jaquel.DDLComposer;
+import de.htwds.jaquel.DropTable;
 import de.htwds.jaquel.Foreign;
 import de.htwds.jaquel.Primary;
 import de.htwds.jaquel.References;
-import de.htwds.jaquel.CreateTable;
-import de.htwds.jaquel.DropTable;
 import de.htwds.jaquel.TableConstraint;
 import de.htwds.jaquel.TruncateTable;
 import java.util.List;
+
+
 
 
 
@@ -19,7 +21,7 @@ import java.util.List;
  * @author phucluoi
  * @version Feb 4, 2013
  */
-public class MySQLComposer implements DDLComposer{
+public class MySQLDDLComposer implements DDLComposer{
 
 	@Override
 	public CreateTable createTable(String tableName) {
@@ -36,8 +38,6 @@ public class MySQLComposer implements DDLComposer{
 		return new MySQLTruncateTable(tableName);
 	}
 }
-
-
 class MySQLCreateTable implements CreateTable{
 	MCreateTable tab;
 	MySQLCreateTable(String tableName) {

@@ -81,4 +81,20 @@ public class MySQLDMLComposerTest extends TestCase {
 		System.out.println(sql);
 		SQLGrammar.checkSyntax(sql);
 	}
+
+	@Test
+	public void testDeleteTable(){
+		DMLComposer p = new MySQLDMLComposer();
+		String delete = p.delete("xxxx").getSQL();
+		System.out.println(delete);
+		SQLGrammar.checkSyntax(delete);
+	}
+	
+	@Test
+	public void testDeleteTwoTables(){
+		DMLComposer p = new MySQLDMLComposer();
+		String delete = p.delete("xxxx", "yyyyy").getSQL();
+		System.out.println(delete);
+		SQLGrammar.checkSyntax(delete);
+	}
 }

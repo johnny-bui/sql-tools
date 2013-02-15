@@ -7,6 +7,8 @@ import java.util.List;
  * @author hbui
  */
 public interface DMLComposer {
-	public InsertTable insertInto(String tableName, List<String> tupel);
-	public InsertTable insertInto(String tableName, String... tupel);
+	public FirstInsertTable insertInto(String tableName, List<String> tupel);
+	public FirstInsertTable insertInto(String tableName, String... tupel);
+	public DeleteTable delete(List<String> tableName);
+	public DeleteTable delete(String... tableName);
 }

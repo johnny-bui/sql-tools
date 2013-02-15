@@ -36,7 +36,7 @@ public class MySQLDDLComposerTest extends TestCase {
 	 */
 	@Test
 	public void testVerySimpleTable() {
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		String sql = p.createTable("hellojaquel")
 				.column("hallo", "varchar(40)")
 				.column("jaquel", "varchar(100)")
@@ -46,7 +46,7 @@ public class MySQLDDLComposerTest extends TestCase {
 	
 	@Test
 	public void testTableWithColumnConstraint(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		String constraintFirst = p.createTable("columnConstraint")
 				.column("column", "bigint").unique().notNull()
 				.column("dummy", "float")
@@ -72,7 +72,7 @@ public class MySQLDDLComposerTest extends TestCase {
 	
 	@Test
 	public void testTableWithTableConstraint(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		
 		String simpleTableConstraint = p.createTable("constraintTab")
 				.column("c1", "bigint")
@@ -120,7 +120,7 @@ public class MySQLDDLComposerTest extends TestCase {
 	}
 	
 	public void testTableWithTableConstraint2(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		
 		String tableDualPrimaryKey = p.createTable("constraintTab")
 				.column("c1", "bigint")
@@ -172,7 +172,7 @@ public class MySQLDDLComposerTest extends TestCase {
 
 	@Test
 	public void testRefercencesNotMatch(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
 		refCols.add("rul1");
@@ -196,7 +196,7 @@ public class MySQLDDLComposerTest extends TestCase {
 
 	@Test
 	public void testRefercencesNotMatch2(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
 		refCols.add("rul1");
@@ -228,7 +228,7 @@ public class MySQLDDLComposerTest extends TestCase {
 
 	@Test
 	public void testRefercencesNotMatch3(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		List<String> refCols = new ArrayList<String>();
 		refCols.add("id");
 		refCols.add("rul1");
@@ -253,7 +253,7 @@ public class MySQLDDLComposerTest extends TestCase {
 
 	@Test
 	public void testDropTable(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		String sql = p.dropTable("xxxxxx").getSQL();
 		System.out.println(sql);
 		SQLGrammar.checkSyntax(sql);
@@ -261,7 +261,7 @@ public class MySQLDDLComposerTest extends TestCase {
 	
 	@Test
 	public void testTruncateTable(){
-		DDLComposer p = new MySQLComposer();
+		DDLComposer p = new MySQLDDLComposer();
 		String sql = p.truncateTable("xxxxx").getSQL();
 		System.out.println(sql);
 		SQLGrammar.checkSyntax(sql);

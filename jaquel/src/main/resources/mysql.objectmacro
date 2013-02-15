@@ -66,6 +66,13 @@ $text:table_option$
 ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 $no_eol$
 $end:table_option$
 
+$comment: ============================== $
+$comment: ====== delete table ========== $
+$comment: ============================== $
+
+$macro: delete_table$
+DELETE FROM $expand: col, separator=", "$ $insert: delimiter$
+$end: delete_table$
 
 
 $comment: ============================== $

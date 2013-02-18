@@ -48,4 +48,15 @@ select distinct Author from Author;
 select all Id from Author;
 select a+b from xxxx as x , yyyyy as y;
 select count(*) from Author as a;
+select count(*) from ( select Author from Author ) as A ;
+select a, b, c from ( select Author from Author ) as A , something as S, prd;
 
+select all * from 
+			  `xxx` as `x`
+ 			, `yyy` as `y`
+ 			, (select `a`, `b`
+				from `mytable` where -- something come here
+			) as `s`
+			, `c`
+			, `d`
+;

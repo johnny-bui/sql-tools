@@ -114,6 +114,7 @@ Tokens
 	distinct = d i s t  i n c t row?;
 	as = a s;
 	all = a l l;
+	where = w h e r e;
 
 	auto = a u t o ;
 	increment = i n c r e m e n t;
@@ -124,11 +125,12 @@ Tokens
 	var = at letter_or_digit+;
 
 	identifier = (backquote letter letter_or_digit* backquote) | (letter letter_or_digit*);
+	oneline_comment = '--' input_character* line_terminator?;
 	string_literal = '"' string_character* '"';
 
 /* Token to be ignored */
 Ignored Tokens
-	blank;
+	blank, oneline_comment;
 
 
 Productions
@@ -267,12 +269,19 @@ Productions
 	
 	select_tail =
 		from_clausel
-/*		where_clausel ?
-		group_by_clausel ?
+		where_clausel ?
+/*		group_by_clausel ?
 		having_clausel?
 		order_by_clausel?
 		limit_clausel?*/;
 	
-	from_clausel = from identifier_list;
-			
-			
+	from_clausel = 
+		{table_ref} from table_ref_list;
+
+	table_ref_list = table_ref more_table_ref*;
+	table_ref = 
+		{id}identifier alias?
+		|{subquery} l_par select_clausel r_par alias;
+	more_table_ref = comma table_ref;	
+	
+	where_clausel = where;	

@@ -22,6 +22,7 @@ public class SQLGrammar {
 
 	
 	public static void main(String[] args) {
+		System.out.println("Running .....");
 		try {
 			InputStream resourceAsStream = SQLGrammar.class.getResourceAsStream("testfile.sql");
 			Lexer l = new Lexer(new PushbackReader( new InputStreamReader(resourceAsStream) ));

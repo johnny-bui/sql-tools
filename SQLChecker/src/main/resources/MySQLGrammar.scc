@@ -33,16 +33,18 @@ Helpers
 	t = 't'|'T';
 	u = 'u'|'U';
 	v = 'v'|'V';
+	w = 'w'|'W';
 	x = 'x'|'X';
 	y = 'y'|'Y';
 	z = 'z'|'Z';
+	dot = '.';
 	backquote = '`';
-	
+	row = r o w ;
+
 	cr  = 0x000d;
 	lf  = 0x000a;
 
 	number = ['0' .. '9']+;
-	dot = '.';
 	at = '@';
 
 	engine = e n g i n e;
@@ -63,6 +65,12 @@ Tokens
 	comma = ',';
 	semicolon = ';';
 	equal = '=';
+	dot = '.';
+	plus = '+';
+	minus = '-';
+	star = '*';
+	slash = '/';
+
 	floating_point_number = digit+ dot digit*;
 	integer_number = number;
 
@@ -102,6 +110,10 @@ Tokens
 	values = v a l u e | v a l u e s ;
 	delete = d e l e t e;
 	from = f r o m;
+	select = s e l e c t;
+	distinct = d i s t  i n c t row?;
+	as = a s;
+	all = a l l;
 
 	auto = a u t o ;
 	increment = i n c r e m e n t;
@@ -194,7 +206,8 @@ Productions
 /* Data manipulation language */
 	dml = 
 		{insert} insert_clausel semicolon
-		|{delete} delete_clausel semicolon;
+		|{delete} delete_clausel semicolon
+		|{select} select_clausel semicolon;
 
 	insert_clausel = insert into identifier 
 			[l_tupel_par]:l_par [tupel]:identifier_list [r_tupel_par]:r_par 
@@ -214,3 +227,35 @@ Productions
 	more_single_value = comma single_value;		
 
 	delete_clausel = delete from identifier_list;
+	
+	select_clausel = select select_option* select_exprs select_tail?;
+
+	select_option = 
+		{all} all
+		|{distinct} distinct
+		;
+		
+	select_exprs = 
+		{exprs} expr_list
+		|{star} star;
+	
+	expr_list = expr more_expr*;
+	expr = simple_expr alias?;
+	more_expr = comma expr;
+	alias = as identifier;
+
+	simple_expr = 
+		{cols} identifier
+		|{ref} [tab]:identifier dot [col]:identifier;
+
+	select_tail =
+		from_clausel
+/*		where_clausel ?
+		group_by_clausel ?
+		having_clausel?
+		order_by_clausel?
+		limit_clausel?*/;
+	
+	from_clausel = from identifier_list;
+			
+			

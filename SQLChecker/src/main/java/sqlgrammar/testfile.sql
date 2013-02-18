@@ -40,3 +40,12 @@ insert into `xxxxxxx` (`a`,`b`,`c`, d) values
 
 delete from `xxxxx`;
 delete from `xxxxx`, yyyyy, `zzzz`;
+
+
+select * from Author;
+select `Id`, Athor from Author;
+select distinct Author from Author;
+select all Id from Author;
+select a+b from xxxx as x , yyyyy as y;
+select count(*) from Author as a;
+

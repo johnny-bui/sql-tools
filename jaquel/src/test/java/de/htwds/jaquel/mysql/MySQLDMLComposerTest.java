@@ -107,7 +107,7 @@ public class MySQLDMLComposerTest extends TestCase {
 					.tab("yyy").as("y")
 					.query(p.select("a","b")
 							.from("mytable").where(
-								p.condition()
+								"a < b and b < 10"// or something like that
 							)
 					).as("s")
 					.tab("c")

@@ -60,3 +60,8 @@ select all * from
 			, `c`
 			, `d`
 ;
+
+
+select 1 + @x_3; -- syntax OK, semantic depends on @x_3
+-- select 1 + @3 -- syntax wrong
+select `x` , `y`; -- syntax OK, but semantic not OK (no table choose)

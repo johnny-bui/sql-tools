@@ -122,7 +122,7 @@ Tokens
 	inno_db = 'InnoDB';	
 	table_type= engine | type;
 	blank = (' ' | 13 | 10 | 9)+;
-	var = at letter_or_digit+;
+	var = at letter letter_or_digit+;
 
 	identifier = (backquote letter letter_or_digit* backquote) | (letter letter_or_digit*);
 	oneline_comment = '--' input_character* line_terminator?;
@@ -258,6 +258,7 @@ Productions
 
 	atom =
 		{cols} identifier
+		|{val} single_value
 		|{ref} [tab]:identifier dot [col]:identifier
 		|{f_call} identifier l_par arg_list r_par;	
 	

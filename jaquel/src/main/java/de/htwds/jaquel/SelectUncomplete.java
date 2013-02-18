@@ -11,4 +11,5 @@ public interface SelectUncomplete {
 	public SelectUncomplete distinct();
 	public SelectTable from(String... tabs);
 	public SelectTable from(List<String> tabs);
+	public SelectTable from(TableReference ref);
 }

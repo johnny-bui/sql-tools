@@ -102,8 +102,8 @@ public class MySQLDMLComposerTest extends TestCase {
 	public void testSelect(){
 		DMLComposer p = null;
 		p.select().all()
-			.from()
-					.tab("xxx").as("x")
+			.from(
+					p.tab("xxx").as("x")
 					.tab("yyy").as("y")
 					.query(p.select("a","b")
 							.from("mytable").where(
@@ -112,7 +112,7 @@ public class MySQLDMLComposerTest extends TestCase {
 					).as("s")
 					.tab("c")
 					.tab("d")
-			.where(p.condition())
+			).where("some thing here")
 		.getSQL();
 /* // generated code:
 select all * from 

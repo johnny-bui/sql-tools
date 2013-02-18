@@ -11,4 +11,7 @@ public interface DMLComposer {
 	public FirstInsertTable insertInto(String tableName, String... tupel);
 	public DeleteTable delete(List<String> tableName);
 	public DeleteTable delete(String... tableName);
+	public SelectUncomplete select();
+	public SelectTable select(String... cols);
+	public SelectTable select(List<String> cols);
 }

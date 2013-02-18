@@ -97,4 +97,41 @@ public class MySQLDMLComposerTest extends TestCase {
 		System.out.println(delete);
 		SQLGrammar.checkSyntax(delete);
 	}
+
+	@Test
+	public void testSelect(){
+		DMLComposer p = null;
+		p.select().all()
+			.from()
+					.tab("xxx").as("x")
+					.tab("yyy").as("y")
+					.query(p.select("a","b")
+							.from("mytable").where(
+								p.condition()
+							)
+					).as("s")
+					.tab("c")
+					.tab("d")
+			.where(p.condition())
+		.getSQL();
+/* // generated code:
+select all * from 
+			  `xxx` as `x`
+ 			, `yyy` as `y`
+ 			, (select(`a`, `b`)
+				from `mytable` where <somthing here> 
+			) as `s`
+			, `c`
+			, `d`
+;
+*/
+		p.select(
+			p.col("aaaa").as("a"), 
+			p.col("bbb").as("b"),
+			p.col("c")).from("sometab").getSQL();
+				
+		p.select("1+2").getSQL();
+
+		p.select("1+2","3+4", "6 > 5").getSQL();// actung: SQL Checker kann diese noch nich parsern
+	}
 }

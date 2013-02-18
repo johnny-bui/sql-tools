@@ -4,7 +4,10 @@ import de.htwds.jaquel.DMLComposer;
 import de.htwds.jaquel.DeleteTable;
 import de.htwds.jaquel.FirstInsertTable;
 import de.htwds.jaquel.InsertTable;
+import de.htwds.jaquel.SelectTable;
+import de.htwds.jaquel.SelectUncomplete;
 import java.util.List;
+
 
 
 
@@ -40,9 +43,23 @@ public class MySQLDMLComposer implements DMLComposer{
 	public DeleteTable delete(List<String> tableName) {
 		return new MySQLDeleteTable(tableName);
 	}
+
+	@Override
+	public SelectUncomplete select() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public SelectTable select(String... cols) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public SelectTable select(List<String> cols) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 	
 }
-
 class MySQLDeleteTable implements DeleteTable{
 	private final MDeleteTable tab;
 

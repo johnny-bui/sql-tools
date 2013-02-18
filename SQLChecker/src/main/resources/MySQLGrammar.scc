@@ -245,12 +245,14 @@ Productions
 	alias = as identifier;
 
 	simple_expr = 
-		term;
+		{term}term
+		|{add} simple_expr plus term
+		|{sub} simple_expr minus term;
 
 	term =
-		{atom}
-		|{add} term plus atom
-		|{sub} term minus atom;
+		{atom} atom
+		|{mul} term star atom
+		|{div} term slash atom;
 
 	atom =
 		{cols} identifier

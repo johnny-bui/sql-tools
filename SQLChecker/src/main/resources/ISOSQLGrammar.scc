@@ -1,0 +1,343 @@
+/* 
+	filename   : ISOSQLGrammar.ssc
+	created on : Feb 19, 2013
+	description:
+*/
+
+/* define package-prefix */
+Package de.htwds.isosql;
+
+
+Helpers
+	letter = [['a' .. 'z']+['A'..'Z']];
+	digit = ['0'..'9'];
+	letter_or_digit = letter | digit | '_';
+	a = 'a'|'A';
+	b = 'b'|'B';
+	c = 'c'|'C';
+	d = 'd'|'D';
+	e = 'e'|'E';
+	f = 'f'|'F';
+	g = 'g'|'G';
+	h = 'h'|'H';
+	i = 'i'|'I';
+	j = 'j'|'J';
+	k = 'k'|'K';
+	l = 'l'|'L';
+	m = 'm'|'M';
+	n = 'n'|'N';
+	o = 'o'|'O';
+	p = 'p'|'P';
+	q = 'q'|'Q';
+	r = 'r'|'R';
+	s = 's'|'S';
+	t = 't'|'T';
+	u = 'u'|'U';
+	v = 'v'|'V';
+	w = 'w'|'W';
+	x = 'x'|'X';
+	y = 'y'|'Y';
+	z = 'z'|'Z';
+	dot = '.';
+	backquote = '`';
+	row = r o w ;
+
+	cr  = 0x000d;
+	lf  = 0x000a;
+
+	number = ['0' .. '9']+;
+	at = '@';
+
+	engine = e n g i n e;
+	type = t y p e ;
+
+	escape_sequence = '\b' | '\t' | '\n' | '\f' | '\r' | '\"' | '\' ''' | '\\' ;
+	unicode_input_character = [0..0xffff];
+	input_character = [unicode_input_character - [cr + lf]];
+	string_character = [input_character - ['"' + '\']] | escape_sequence;
+	line_terminator = lf | cr | cr lf;
+	string_literal = '"' string_character* '"';	
+
+
+/* define token */
+Tokens
+	l_par = '(';
+	r_par = ')';
+	comma = ',';
+	semicolon = ';';
+	equal = '=';
+	period = '.';
+	plus_sign = '+';
+	minus_sign = '-';
+	asterisk = '*';
+	solidus = '/';
+
+	floating_point_number = digit+ dot digit*;
+	integer_number = number;
+
+	// Keywords
+		// data type
+	integer = i n t e g e r;
+	bigint = b  i g i n t;
+	float = f l o a t;
+	timestamp = t i m e s t a m p ;
+	varchar = v a r c h a r;
+	text = t e x t;
+		// KW in create table statement
+	create = c r e a t e;
+	table = t a b l e;
+	if = i f;
+	exists = e x i s t s;
+	
+	constraint = c o n s t r a i n t;
+	foreign = f o r e i g n ;
+	primary = p r i m a r y;
+	key = k e y;
+	unique = u n i q u e;
+	not = n o t;
+	null = n u l l;	
+	references = r e f e r e n c e s;	
+	default = d e f a u l t;
+	character = c h a r a c t e r;
+	set = s e t;
+	auto_increment = a u t o '_' i n c r e m e n t;
+		// KW in drop table statement
+	drop = d r o p;
+		// KW in truncate table statement
+	truncate = t r u n c a t e;
+		// KW in insert into
+	insert = i n s e r t;
+	into = i n t o;
+	values = v a l u e | v a l u e s ;
+	delete = d e l e t e;
+	from = f r o m;
+	select = s e l e c t;
+	distinct = d i s t i n c t;
+	as = a s;
+	all = a l l;
+	where = w h e r e;
+// Boolean key
+	or = o r;
+	and = a n d;
+	is = i s;
+	true = t r u e;
+	false = f a l s e;
+	unknow = u n k n o w;
+
+
+
+	placeholder = p l a c  e h o l d e r;
+
+	auto = a u t o ;
+	increment = i n c r e m e n t;
+	my_isam = 'MyISAM';
+	inno_db = 'InnoDB';	
+	table_type= engine | type;
+	blank = (' ' | 13 | 10 | 9)+;
+	var = at letter letter_or_digit*;
+
+	identifier = (backquote letter letter_or_digit* backquote) | (letter letter_or_digit*);
+	oneline_comment = '--' input_character* line_terminator?;
+	string_literal = '"' string_character* '"';
+
+/* Token to be ignored */
+Ignored Tokens
+	blank, oneline_comment;
+
+
+Productions
+	sql = sttm+;
+	sttm =
+		dml
+	;
+/* Data manipulation language */
+	dml = 
+		{select} query_specification semicolon
+	;
+
+	query_specification = 
+		select  set_quantifier? select_list  table_expression?
+	;
+// <set quantifier>    ::=   DISTINCT | ALL 
+	 set_quantifier = 
+		{all} all
+		|{distinct} distinct
+		;
+// <select list>    ::=   <asterisk> | <select sublist> [ { <comma> <select sublist> }... ] 		
+	select_list = 
+		{asterisk}  asterisk
+		|{sublist} select_sublist_list;// <=> select_sublist [{comma select_sublist}]
+	
+	select_sublist_list = select_sublist more_select_sublist*;
+	more_select_sublist = comma select_sublist;
+
+//  <select sublist>    ::=   <derived column> | <qualified asterisk> 
+	select_sublist = 
+		 {col} derived_column
+		|{qual} qualified_asterisk
+	;
+//  <qualified asterisk>    ::=
+//         <asterisked identifier chain> <period> <asterisk>
+//     |     <all fields reference> 
+	qualified_asterisk = 
+		{simple} asterisked_identifier_chain period asterisk
+		|{all} all_files_reference
+	;
+// <asterisked identifier chain>    ::=   <asterisked identifier> [ { <period> <asterisked identifier> }... ] 
+	asterisked_identifier_chain =
+		asterisked_identifier more_asterisked_identifier*
+	;
+	more_asterisked_identifier =
+		period asterisked_identifier
+	;
+
+//  <asterisked identifier>    ::=   <identifier> 
+	asterisked_identifier = identifier;
+
+//  <derived column>    ::=   <value expression> [ <as clause> ] 
+	derived_column = value_expression as_clause?;
+
+//	<as clause>    ::=   [ AS ] <column name> 
+	as_clause = as? column_name;
+
+//  <all fields reference>    ::=   <value expression primary> <period> <asterisk> [ AS <left paren> <all fields column name list> <right paren> ] 
+	all_fields_reference =   
+		value_expression_primary period asterisk fields_alias? //[ AS <left paren> <all fields column name list> <right paren> ] 	
+	;
+ 	fields_alias = as l_par all_fields_column_name_list r_par;
+
+//  <all fields column name list>    ::=   <column name list> 
+	all_fields_column_name_list =   column_name_list;
+
+// <column name list>    ::=   <column name> [ { <comma> <column name> }... ] 
+	column_name_list = column_name more_column_name*;
+	more_column_name = comma column_name;
+
+// <column name>    ::=   <identifier> 
+	column_name = identifier;
+
+//<value expression>    ::=
+//         <common value expression>
+//     |     <boolean value expression>
+//     |     <row value expression>	
+	value_expression =
+		{common} common_value_expression
+		|{bool} boolean_value_expression
+		//|{row} row_value_expression
+	;
+
+//<common value expression>    ::=
+//         <numeric value expression>
+//     |     <string value expression>
+//     |     <datetime value expression>
+//     |     <interval value expression>
+//     |     <user-defined type value expression>
+//     |     <reference value expression>
+//     |     <collection value expression>
+	common_value_expression =
+		{nummer} numeric_value_expression
+//		|{string} string_value_expression
+//		|{datetime} datetime_value_expression
+/*		|{interval} interval_value_expression              // not support now
+		|{user_def} user_defined_type_value_expression
+		|{ref} reference_value_expression
+		|{collection} collection_value_expression
+*/
+	;	
+// <numeric value expression>    ::=
+//         <term>
+//     |     <numeric value expression> <plus sign> <term>
+//     |     <numeric value expression> <minus sign> <term>
+	numeric_value_expression =
+		{term} term
+		|{add} numeric_value_expression plus_sign term
+		|{sub} numeric_value_expression minus_sign term
+	;
+
+//<term>    ::=
+//         <factor>
+//     |     <term> <asterisk> <factor>
+//     |     <term> <solidus> <factor>
+	term =
+		{factor} factor
+		|{mul} term asterisk factor
+		|{div} term solidus factor
+	;
+	
+//<factor>    ::=   [ <sign> ] <numeric primary>
+	factor = sign numeric_primary;
+//<sign>    ::=   <plus sign> | <minus sign> 	
+	sign =
+		{plus} plus_sign
+		|{minus} minus_sign
+	;
+
+//<numeric primary>    ::=
+//         <value expression primary>
+//     |     <numeric value function> 
+	numeric_primary =
+		{expr} value_expression_primary
+		|{function} numeric_value_function
+	;
+
+//<value expression primary>    ::=
+//         <parenthesized value expression>
+//     |     <nonparenthesized value expression primary>
+	value_expression_primary =
+		 {parenthesized} parenthesized_value_expression
+		|{nonparenthesized} nonparenthesized_value_expression_primary // not supported yet
+	;
+//  <parenthesized value expression>    ::=   <left paren> <value expression> <right paren> 
+	parenthesized_value_expression = l_par value_expression r_par;
+
+//<boolean value expression>    ::=
+//         <boolean term>
+//     |     <boolean value expression> OR <boolean term>
+	boolean_value_expression =
+		{term} boolean_term
+		|{or} boolean_value_expression or boolean_term
+	;
+
+//<boolean term>    ::=
+//         <boolean factor>
+//     |     <boolean term> AND <boolean factor>
+	boolean_term =
+		boolean_factor
+		|{and} boolean_term and boolean_factor
+	;
+
+//<boolean factor>    ::=   [ NOT ] <boolean test>
+	boolean_factor = not? boolean_test;
+	
+//<boolean test>    ::=   <boolean primary> [ IS [ NOT ] <truth value> ]
+	boolean_test = boolean_primaty is_not_clause?;
+	is_not_clause = is not? truth_value;
+
+//<truth value>    ::=   TRUE | FALSE | UNKNOWN
+	truth_value =
+		{true} true
+		|{false} false
+		|{unkonw} unknow
+	;
+
+//<boolean primary>    ::=   <predicate> | <boolean predicand>
+	boolean_primary =
+		{predicate} predicate
+		|{boolean} boolean_predicand
+	;
+
+//<boolean predicand>    ::=
+//         <parenthesized boolean value expression>
+//     |     <nonparenthesized value expression primary>
+	boolean_predicand =
+		{parenthesized} parenthesized_boolean_value_expression
+		|{nonparenthesized} nonparenthesized_value_expresson_primary
+	;
+
+//<parenthesized boolean value expression>    ::=   <left paren> <boolean value expression> <right paren> 	
+	parenthesized_boolean_value_expression    =   l_par boolean_value_expression right_paren;
+
+////////////////////////////////////////////////////////////////////////////////
+	table_expression = placeholder;
+	all_files_reference = placeholder;
+//	row_value_expression = placeholder;

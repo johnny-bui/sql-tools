@@ -99,9 +99,23 @@ public class MySQLDMLComposerTest extends TestCase {
 	}
 
 	@Test
+	public void testSimpleSelect(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select().distinct()
+					 .from("sometab")
+					 .getSQL();
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>"+sql);
+		fail("TODO");
+		/*
+		select distinct * from sometab ;
+		 */
+	}
+	
+	
+	@Test
 	public void testSelect(){
 		DMLComposer p = null;
-		p.select().all()
+		p.select()
 			.from(
 					p.tab("xxx").as("x")
 					.tab("yyy").as("y")
@@ -112,10 +126,12 @@ public class MySQLDMLComposerTest extends TestCase {
 					).as("s")
 					.tab("c")
 					.tab("d")
+					.tab("xxxxx")
 			).where("some thing here")
 		.getSQL();
+		
 /* // generated code:
-select all * from 
+select * from 
 			  `xxx` as `x`
  			, `yyy` as `y`
  			, (select(`a`, `b`)
@@ -125,11 +141,40 @@ select all * from
 			, `d`
 ;
 */
+		p.select().distinct(
+			p.col("aaaa").as("a"). 
+			col("bbb").as("b").
+			col("c")
+		).from("sometab")
+		.getSQL();
+/*
+ select distinct aaaa as a, bbb as b from sometab; 
+*/	
+		p.select().distinct()
+		.from("sometab")
+		.getSQL();	
+/*
+ select distinct * from sometab ; 
+*/
+		
+		p.select().all(
+			p.col("aaaa").as("a"). 
+			col("bbb").as("b").
+			col("c")
+		).from("sometab")
+		.getSQL();
+/*
+ select all aaaa as a, bbb as b, d from sometab ; 
+*/		
 		p.select(
-			p.col("aaaa").as("a"), 
-			p.col("bbb").as("b"),
-			p.col("c")).from("sometab").getSQL();
-				
+			p.col("aaaa").as("a"). 
+			col("bbb").as("b").
+			col("c")
+		).from("sometab")
+		.getSQL();
+/*
+ select aaaa as a, bbb as b, c from sometab ;
+*/		
 		p.select("1+2").getSQL();
 
 		p.select("1+2","3+4", "6 > 5").getSQL();// actung: SQL Checker kann diese noch nich parsern

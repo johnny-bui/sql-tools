@@ -10,5 +10,5 @@ public interface TableReference extends CompleteSQL{
 	TableReference as(String alias);
 	TableReference tab(String tableName);
 
-	public TableReference query(SelectClausel select);
+	public TableReference query(CompleteSQL select);
 }

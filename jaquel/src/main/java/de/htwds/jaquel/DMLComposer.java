@@ -12,9 +12,12 @@ public interface DMLComposer {
 	public DeleteTable delete(List<String> tableName);
 	public DeleteTable delete(String... tableName);
 	
-	public SelectUncomplete select();
-	public SelectTable select(String... cols);
-	public SelectTable select(List<String> cols);
+	public QuantifierSelect select();
+	public FromSelect select(String... cols);
+	public FromSelect select(List<String> cols);
+	public FromSelect select(ColumnRefercence cols);
 	// methods used in select statement
 	public TableReference tab(String xxx);
+
+	public ColumnRefercence col(String aaaa);
 }

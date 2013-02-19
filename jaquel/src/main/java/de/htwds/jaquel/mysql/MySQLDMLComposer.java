@@ -1,14 +1,16 @@
 package de.htwds.jaquel.mysql;
 
+import de.htwds.jaquel.ColumnRefercence;
 import de.htwds.jaquel.DMLComposer;
 import de.htwds.jaquel.DeleteTable;
 import de.htwds.jaquel.FirstInsertTable;
+import de.htwds.jaquel.FromSelect;
+import de.htwds.jaquel.GroupBy;
 import de.htwds.jaquel.InsertTable;
-import de.htwds.jaquel.SelectTable;
-import de.htwds.jaquel.SelectUncomplete;
+import de.htwds.jaquel.QuantifierSelect;
+import de.htwds.jaquel.TableReference;
+import de.htwds.jaquel.WhereClause;
 import java.util.List;
-
-
 
 
 
@@ -44,22 +46,181 @@ public class MySQLDMLComposer implements DMLComposer{
 		return new MySQLDeleteTable(tableName);
 	}
 
+////////////////////////////////////////////////////////////////////////////////
+//============================ S E L E C T =====================================
+////////////////////////////////////////////////////////////////////////////////
+
 	@Override
-	public SelectUncomplete select() {
+	public QuantifierSelect select() {
+		return new MySQLQuantifierSelect();
+	}
+
+	@Override
+	public FromSelect select(String... cols) {
+		return new MySQLFromSelect(cols);
+	}
+
+	@Override
+	public FromSelect select(List<String> cols) {
+		return new MySQLFromSelect(cols);
+	}
+
+	@Override
+	public FromSelect select(ColumnRefercence cols) {
+		return new MySQLFromSelect(cols);
+	}
+
+	@Override
+	public TableReference tab(String tab) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public SelectTable select(String... cols) {
+	public ColumnRefercence col(String col) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MySQLWhereClause implements WhereClause{
+	private final MSelect macro;
+
+	MySQLWhereClause(MSelect m) {
+		macro = m;
+	}
+
+	@Override
+	public GroupBy where(String... condition) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public SelectTable select(List<String> cols) {
+	public String getSQL() {
+		return macro.toString();
+	}
+	
+}
+
+
+
+
+
+class MySQLFromSelect implements FromSelect{
+	private final MSelect m;
+
+	MySQLFromSelect(String[] cols) {
+		m = new MSelect();
+	}
+
+	MySQLFromSelect(List<String> cols) {
+		m = new MSelect();
+		for (String s : cols){
+			m.newSelectList(s);
+		}
+	}
+
+	MySQLFromSelect(ColumnRefercence cols) {
+		m = new MSelect();
+		m.newSelectList(cols.getSQLClause());
+	}
+
+	public MySQLFromSelect(MSelect macro) {
+		m = macro;
+	}
+	
+	
+	@Override
+	public WhereClause from(String... tabs) {
+		return new MySQLWhereClause(m);
+	}
+
+	@Override
+	public WhereClause from(TableReference tabs) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public String getSQL() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 	
 }
+
+class MySQLQuantifierSelect implements QuantifierSelect{
+	private final MSelect macro;
+	
+	MySQLQuantifierSelect(){
+		macro = new MSelect();
+	}
+	
+	@Override
+	public FromSelect all() {
+		macro.newAll();
+		macro.newAsterisk();// QUESTION? where is better to call this method
+		// here or in the Constructor MySQLFromSelect(MSelect)
+		MySQLFromSelect f = new MySQLFromSelect(macro);
+		return f;
+	}
+
+	@Override
+	public FromSelect all(ColumnRefercence cols) {
+		macro.newAll();
+		macro.newSelectList(cols.getSQLClause());
+		MySQLFromSelect f = new MySQLFromSelect(macro);
+		return f;
+	}
+
+	@Override
+	public FromSelect distinct() {
+		macro.newDistinct();
+		macro.newAsterisk();
+		MySQLFromSelect f = new MySQLFromSelect(macro);
+		return f;
+	}
+
+	@Override
+	public FromSelect distinct(ColumnRefercence cols) {
+		macro.newDistinct();
+		macro.newSelectList(cols.getSQLClause());
+		MySQLFromSelect f = new MySQLFromSelect(macro);
+		return f;
+	}
+
+	@Override
+	public WhereClause from(String... tabs) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public WhereClause from(TableReference tabs) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public String getSQL() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+}
+
+
+
 class MySQLDeleteTable implements DeleteTable{
 	private final MDeleteTable tab;
 

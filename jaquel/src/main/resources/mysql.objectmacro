@@ -105,6 +105,33 @@ $macro: values(literal)$
 $(literal)$no_eol$
 $end: values$
 
+$comment: ============================== $
+$comment: ========== SELECT ============ $
+$comment: ============================== $
+
+$macro: select$
+SELECT $expand: all$ $expand: distinct$
+	$expand: asterisk$ 
+	$expand: select_list, separator = ","$
+	$expand: table_expression$ 
+
+
+$macro:all$ ALL $end:all$
+$macro:distinct$ DISTINCT $end:distinct$
+$macro:asterisk$ * $end:asterisk$
+$end: select$
+
+$macro: select_list(name)$
+`$name`
+$end: select_list$
+
+$macro: table_expression$
+FROM ...
+WHERE ....
+GROUP BY ....
+$end: table_expression$
+
+
 $comment: ========== SQL demiliter ===== $
 
 $text:delimiter$ 

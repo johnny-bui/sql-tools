@@ -274,6 +274,7 @@ Productions
 /*		group_by_clausel ?
 		having_clausel?
 		order_by_clausel?
+		into_clausel
 		limit_clausel?*/;
 	
 	from_clausel = 

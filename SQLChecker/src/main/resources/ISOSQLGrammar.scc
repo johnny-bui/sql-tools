@@ -130,9 +130,6 @@ Tokens
 
 	auto = a u t o ;
 	increment = i n c r e m e n t;
-	my_isam = 'MyISAM';
-	inno_db = 'InnoDB';	
-	table_type= engine | type;
 	blank = (' ' | 13 | 10 | 9)+;
 	var = at letter letter_or_digit*;
 

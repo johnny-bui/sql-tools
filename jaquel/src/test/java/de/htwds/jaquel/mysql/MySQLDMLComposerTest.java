@@ -5,6 +5,7 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.DMLComposer;
+import de.htwds.jaquel.WhereClause;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -99,22 +100,56 @@ public class MySQLDMLComposerTest extends TestCase {
 	}
 
 	@Test
-	public void testSimpleSelect(){
+	public void testSimpleAllSelect(){
 		DMLComposer p = new MySQLDMLComposer();
-		String sql = p.select().distinct()
-					 .from("sometab")
-					 .getSQL();
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>"+sql);
-		fail("TODO");
+		WhereClause sql = p.select().all()
+					 .from("sometab", "somewhere_else");
+					 
+		System.out.println( sql.getSQL() );
 		/*
-		select distinct * from sometab ;
+		select all * from `sometab` , `somewhere_else`;
 		 */
 	}
 	
+	@Test
+	public void testSimpleDistinctSelect(){
+		DMLComposer p = new MySQLDMLComposer();
+		WhereClause sql = p.select().distinct()
+					 .from("sometab", "somewhere_else");
+					 
+		System.out.println( sql.getSQL() );
+		/*
+		select distinct * from `sometab` ;
+		 */
+	}
+	
+	@Test
+	public void testSimpleColumnSelect(){
+		DMLComposer p = new MySQLDMLComposer();
+		WhereClause sql = p.select("aaa", "bbbb")
+					 .from("sometab", "somewhere_else");
+					 
+		System.out.println( sql.getSQL() );
+		/*
+		select distinct `aaa`, `bbbb` from `sometab`, `somewhere_else` ;
+		 */
+	}
+	
+	@Test
+	public void testSimpleColumnInDistinctSelect(){
+		DMLComposer p = new MySQLDMLComposer();
+		WhereClause sql = p.select().distinct("aaa", "bbbb")
+					 .from("sometab", "somewhere_else");
+					 
+		System.out.println( sql.getSQL() );
+		/*
+		select distinct `aaa`, `bbbb` from `sometab`, `somewhere_else` 
+		 */
+	}
 	
 	@Test
 	public void testSelect(){
-		DMLComposer p = null;
+		DMLComposer p = new MySQLDMLComposer();
 		p.select()
 			.from(
 					p.tab("xxx").as("x")
@@ -141,22 +176,85 @@ select * from
 			, `d`
 ;
 */
-		p.select().distinct(
-			p.col("aaaa").as("a"). 
-			col("bbb").as("b").
-			col("c")
-		).from("sometab")
-		.getSQL();
-/*
- select distinct aaaa as a, bbb as b from sometab; 
-*/	
-		p.select().distinct()
-		.from("sometab")
-		.getSQL();	
-/*
- select distinct * from sometab ; 
-*/
-		
+	}
+
+	@Test
+	public void testTableRefMacro(){
+		MTableReference m = new MTableReference("xxxx");
+		m.newAsClause("x");
+		System.out.println(">>>>>>>>>>>>>" + m.toString() + "<<<<<<<<<<<<<<<<<<<");
+
+		MTableReferenceList ml = new MTableReferenceList();
+		ml.newTableReference("xxxxx");
+		ml.newTableReference("yyyyyy").newAsClause("y");
+		ml.newTableReference("tttttt");
+		System.out.println(">>>>>>>>>>>>>>>>>>" + ml.toString() + "<<<<<<<<<<<<<<<<");
+	}
+	
+	@Test
+	public void testMySQLTableReference(){
+		MySQLTableReference m = new MySQLTableReference("xxxxx");
+		m.as("x");
+		m.tab("yyyyy").as("y");
+		System.out.println(">>>>>>>>>>>>>" + m.getSQL() + "<<<<<<<<<<<<<<<<<<<");
+	}
+	
+	@Test
+	public void testTableWithAlias(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select().distinct()
+					 .from(p.tab("xxx").as("x")
+							.tab("yyyy").as("y"))
+					 .getSQL();
+		System.out.println(sql);
+		/*
+		select distinct aaaa as a, bbb as b from sometab;
+		 */	
+	}
+	
+	@Test
+	public void testColumnWithAlias(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select().distinct(
+						 p.col("aaaa").as("a"). 
+						 col("bbb").as("b").
+						 col("c")
+					 ).from("sometab")
+					 .getSQL();
+		System.out.println(sql);
+		/*
+		select distinct `aaaa` as `a`, `bbb` as `b` from `sometab`;
+		 */	
+	}
+	
+	@Test
+	public void testSelectDistinct(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select().distinct()
+					 .from("sometab")
+					 .getSQL();
+		System.out.println(sql);
+		/*
+		select distinct * from sometab ;
+		 */
+	}
+	
+	@Test
+	public void testSelectAll(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select().all()
+					 .from("sometab")
+					 .getSQL();
+		System.out.println(sql);
+		/*
+		select distinct * from sometab ;
+		 */
+	}
+
+	
+	@Test
+	public void testSelectAllCols(){
+		DMLComposer p = new MySQLDMLComposer();
 		p.select().all(
 			p.col("aaaa").as("a"). 
 			col("bbb").as("b").

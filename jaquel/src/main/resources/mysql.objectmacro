@@ -110,26 +110,95 @@ $comment: ========== SELECT ============ $
 $comment: ============================== $
 
 $macro: select$
-SELECT $expand: all$ $expand: distinct$
-	$expand: asterisk$ 
-	$expand: select_list, separator = ","$
-	$expand: table_expression$ 
-
-
-$macro:all$ ALL $end:all$
-$macro:distinct$ DISTINCT $end:distinct$
-$macro:asterisk$ * $end:asterisk$
+SELECT $expand: all$ $expand:distinct$ $expand: asterisk$
+$expand: select_list$ 
+$expand: from_clause$ 
+	$expand: group_by_clause$
+	$expand: where_clause$
 $end: select$
 
-$macro: select_list(name)$
-`$name`
+$macro:all$
+ALL$no_eol$
+$end:all$
+
+$macro:distinct$
+DISTINCT$no_eol$
+$end:distinct$
+
+$macro:asterisk$
+* $no_eol$
+$end:asterisk$
+
+
+$macro: select_list$
+$expand: column_reference, separator=",", after_last="\n"$ 
+$expand: column_collection, separator=", "$
 $end: select_list$
 
-$macro: table_expression$
-FROM ...
-WHERE ....
-GROUP BY ....
-$end: table_expression$
+$comment: ================================================== $
+$comment: ========column reference ========================= $
+$comment: ================================================== $
+$macro: column_reference(col)$
+`$(col)` $expand:as_clause$
+$end: column_reference$
+
+$macro: column_collection(sub_col)$
+$sub_col
+$end: column_collection$
+
+$macro: column_reference_list$
+$expand: column_reference, separator=", "$
+$end:column_reference_list$
+
+$macro:as_clause(alias)$
+AS `$(alias)`$no_eol$
+$end:as_clause$
+
+
+$comment: ================================================== $
+$comment: ========from clause      ========================= $
+$comment: ================================================== $
+
+$macro: from_clause$
+FROM $expand:table_reference_list$
+$end: from_clause$
+
+$macro: table_reference_list$
+$expand:table_reference, separator=", ", after_last="\n"$
+$expand:table_collection, separator=", ", after_last="\n"$
+$end: table_reference_list$
+
+$macro: table_collection(sub_tab)$
+$sub_tab
+$end: table_collection$
+
+$comment: ================================================== $
+$comment: ========== table reference, object of change ===== $
+$macro: table_reference(tab)$
+`$(tab)` $expand:as_clause$ $no_eol$
+$end: table_reference$
+
+
+
+
+
+
+
+
+
+
+
+$macro: group_by_clause$
+GROUP BY
+$end:group_by_clause$
+
+
+$macro: where_clause$
+WHERE 
+$end: where_clause$
+
+
+
 
 
 $comment: ========== SQL demiliter ===== $

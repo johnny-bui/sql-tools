@@ -1,6 +1,8 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.ColumnRefercence;
+import de.htwds.jaquel.ColumnRefercenceWithAs;
+import de.htwds.jaquel.CompleteSQL;
 import de.htwds.jaquel.DMLComposer;
 import de.htwds.jaquel.DeleteTable;
 import de.htwds.jaquel.FirstInsertTable;
@@ -9,6 +11,7 @@ import de.htwds.jaquel.GroupBy;
 import de.htwds.jaquel.InsertTable;
 import de.htwds.jaquel.QuantifierSelect;
 import de.htwds.jaquel.TableReference;
+import de.htwds.jaquel.TableReferenceWithAs;
 import de.htwds.jaquel.WhereClause;
 import java.util.List;
 
@@ -22,17 +25,16 @@ import java.util.List;
  * @author hbui
  */
 public class MySQLDMLComposer implements DMLComposer{
-	private MInsertInto tab;
 
 	@Override
 	public FirstInsertTable insertInto(String tableName, List<String> tupel) {
-		tab = new MInsertInto(tableName);
+		MInsertInto tab = new MInsertInto(tableName);
 		return new MySQLInsertTable(tab,tupel);
 	}
 
 	@Override
 	public FirstInsertTable insertInto(String tableName, String... tupel) {
-		tab = new MInsertInto(tableName);
+		MInsertInto tab = new MInsertInto(tableName);
 		return new MySQLInsertTable(tab,tupel);
 	}
 
@@ -57,27 +59,39 @@ public class MySQLDMLComposer implements DMLComposer{
 
 	@Override
 	public FromSelect select(String... cols) {
-		return new MySQLFromSelect(cols);
+		MSelect macro = new MSelect();
+		MSelectList c = macro.newSelectList();
+		for (String s : cols){
+			c.newColumnReference(s);
+		}
+		return new MySQLFromSelect(macro);
 	}
 
 	@Override
 	public FromSelect select(List<String> cols) {
-		return new MySQLFromSelect(cols);
+		MSelect macro = new MSelect();
+		MSelectList c = macro.newSelectList();
+		for (String s : cols){
+			c.newColumnReference(s);
+		}
+		return new MySQLFromSelect(macro);
 	}
 
 	@Override
 	public FromSelect select(ColumnRefercence cols) {
-		return new MySQLFromSelect(cols);
+		MSelect macro = new MSelect();
+		macro.newSelectList().newColumnCollection(cols.getSQLClause());
+		return new MySQLFromSelect(macro);
 	}
 
 	@Override
 	public TableReference tab(String tab) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return new MySQLTableReference(tab);
 	}
 
 	@Override
 	public ColumnRefercence col(String col) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return new MySQLColumnReference(col);
 	}
 
 }
@@ -91,11 +105,68 @@ public class MySQLDMLComposer implements DMLComposer{
 
 
 
+class MySQLColumnReference implements ColumnRefercence{
+	private final MColumnReferenceList m;
+	private MColumnReference lastCol;
+
+	MySQLColumnReference(String col) {
+		m = new MColumnReferenceList();
+		lastCol = m.newColumnReference(col);
+	}
+
+	@Override
+	public ColumnRefercenceWithAs as(String alias) {
+		lastCol.newAsClause(alias);
+		return this;
+	}
+
+	@Override
+	public ColumnRefercence col(String colName) {
+		lastCol = m.newColumnReference(colName);
+		return this;
+	}
+
+	@Override
+	public String getSQLClause() {
+		return m.toString();
+	}
+	
+}
 
 
 
+class MySQLTableReference implements TableReference{
+	private final MTableReferenceList macro;
+	private MTableReference lastTable;
 
+	MySQLTableReference(String tab) {
+		macro = new MTableReferenceList();
+		lastTable = macro.newTableReference(tab);
+	}
 
+	@Override
+	public TableReference as(String alias) {
+		// ERROR, this method can be called more than once on a table
+		lastTable.newAsClause(alias);
+		return this;
+	}
+
+	@Override
+	public TableReference tab(String tableName) {
+		lastTable = macro.newTableReference(tableName);
+		return this;
+	}
+
+	@Override
+	public TableReference query(CompleteSQL select) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public String getSQL() {
+		return macro.toString();
+	}
+}
 
 
 class MySQLWhereClause implements WhereClause{
@@ -104,6 +175,7 @@ class MySQLWhereClause implements WhereClause{
 	MySQLWhereClause(MSelect m) {
 		macro = m;
 	}
+	
 
 	@Override
 	public GroupBy where(String... condition) {
@@ -117,50 +189,40 @@ class MySQLWhereClause implements WhereClause{
 	
 }
 
-
-
-
-
 class MySQLFromSelect implements FromSelect{
 	private final MSelect m;
 
-	MySQLFromSelect(String[] cols) {
-		m = new MSelect();
-	}
-
-	MySQLFromSelect(List<String> cols) {
-		m = new MSelect();
-		for (String s : cols){
-			m.newSelectList(s);
-		}
-	}
-
-	MySQLFromSelect(ColumnRefercence cols) {
-		m = new MSelect();
-		m.newSelectList(cols.getSQLClause());
-	}
-
-	public MySQLFromSelect(MSelect macro) {
+	MySQLFromSelect(MSelect macro) {
 		m = macro;
 	}
 	
 	
 	@Override
 	public WhereClause from(String... tabs) {
+		MFromClause from = m.newFromClause();
+		MTableReferenceList tabList = from.newTableReferenceList();
+		for (String s:tabs){
+			tabList.newTableReference(s);
+		}
 		return new MySQLWhereClause(m);
 	}
 
 	@Override
-	public WhereClause from(TableReference tabs) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public WhereClause from(TableReferenceWithAs tabs) {
+		MFromClause from = m.newFromClause();
+		from.newTableReferenceList().newTableCollection(tabs.getSQL());
+		return new MySQLWhereClause(m);
 	}
 
 	@Override
 	public String getSQL() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return m.toString();
 	}
 	
 }
+
+
+
 
 class MySQLQuantifierSelect implements QuantifierSelect{
 	private final MSelect macro;
@@ -181,7 +243,7 @@ class MySQLQuantifierSelect implements QuantifierSelect{
 	@Override
 	public FromSelect all(ColumnRefercence cols) {
 		macro.newAll();
-		macro.newSelectList(cols.getSQLClause());
+		macro.newSelectList().newColumnReference(cols.getSQLClause());
 		MySQLFromSelect f = new MySQLFromSelect(macro);
 		return f;
 	}
@@ -197,18 +259,38 @@ class MySQLQuantifierSelect implements QuantifierSelect{
 	@Override
 	public FromSelect distinct(ColumnRefercence cols) {
 		macro.newDistinct();
-		macro.newSelectList(cols.getSQLClause());
+		macro.newSelectList().newColumnCollection(cols.getSQLClause());
 		MySQLFromSelect f = new MySQLFromSelect(macro);
 		return f;
 	}
+	
+	@Override
+	public FromSelect all(String... cols) {
+		macro.newAll();
+		MSelectList col = macro.newSelectList();
+		for (String c:cols){
+			col.newColumnReference(c);
+		}
+		return new MySQLFromSelect(macro);
+	}
 
+	@Override
+	public FromSelect distinct(String... cols) {
+		macro.newDistinct();
+		MSelectList col = macro.newSelectList();
+		for (String c:cols){
+			col.newColumnReference(c);
+		}
+		return new MySQLFromSelect(macro);
+	}
+	
 	@Override
 	public WhereClause from(String... tabs) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public WhereClause from(TableReference tabs) {
+	public WhereClause from(TableReferenceWithAs tabs) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -216,6 +298,8 @@ class MySQLQuantifierSelect implements QuantifierSelect{
 	public String getSQL() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+
+	
 
 }
 

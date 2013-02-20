@@ -152,7 +152,7 @@
 	 <dependency>
 	  <groupId>de.htwds</groupId>
 	  <artifactId>SQLChecker</artifactId>
-	  <version>0.1-beta-0</version>
+	  <version>0.1-beta-1</version>
 	  <scope>test</scope>
 	  <type>jar</type>
 	 </dependency>

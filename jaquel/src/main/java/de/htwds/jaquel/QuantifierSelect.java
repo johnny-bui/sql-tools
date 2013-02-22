@@ -17,7 +17,7 @@ public interface QuantifierSelect extends FromSelect{
 	/**
 	 * <code>SELECT ALL `cols1`, `cols2`, `cosl3` ...</code>
 	 */
-	public FromSelect all(String... cols);
+	public FromSelect all(String firstCol, String... cols);
 	
 	/**
 	 * <code>SELECT DISTINCT *</code>
@@ -31,6 +31,6 @@ public interface QuantifierSelect extends FromSelect{
 	/**
 	 * <code>SELECT DISTINCT `cols1`, `cols2`, `cosl3` ...</code>
 	 */
-	public FromSelect distinct(String... cols);
+	public FromSelect distinct(String firstCol, String... cols);
 
 }

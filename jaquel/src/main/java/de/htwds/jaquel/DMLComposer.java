@@ -13,11 +13,12 @@ public interface DMLComposer {
 	public DeleteTable delete(String... tableName);
 	
 	public QuantifierSelect select();
-	public FromSelect select(String... cols);
+	public FromSelect select(String firstCol, String... cols);
 	public FromSelect select(List<String> cols);
-	public FromSelect select(ColumnRefercence cols);
+	public FromSelect select(ColumnRefercenceWithAs cols);
 	// methods used in select statement
 	public TableReference tab(String xxx);
-
+	public TableReferenceWithoutAs query(SQLSubClause subclause);
+	
 	public ColumnRefercence col(String aaaa);
 }

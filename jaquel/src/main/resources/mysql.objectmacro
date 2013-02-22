@@ -113,8 +113,8 @@ $macro: select$
 SELECT $expand: all$ $expand:distinct$ $expand: asterisk$
 $expand: select_list$ 
 $expand: from_clause$ 
-	$expand: group_by_clause$
 	$expand: where_clause$
+	$expand: group_by_clause$
 $end: select$
 
 $macro:all$
@@ -160,16 +160,17 @@ $comment: ========from clause      ========================= $
 $comment: ================================================== $
 
 $macro: from_clause$
-FROM $expand:table_reference_list$
+FROM $expand:table_reference_list, separator=",", after_last="\n"$ 
 $end: from_clause$
 
 $macro: table_reference_list$
-$expand:table_reference, separator=", ", after_last="\n"$
-$expand:table_collection, separator=", ", after_last="\n"$
+$expand:table_reference, separator=", "$
+$expand:table_collection, separator=", "$
+$expand:sub_table, separator=", "$
 $end: table_reference_list$
 
 $macro: table_collection(sub_tab)$
-$sub_tab
+$sub_tab $no_eol$
 $end: table_collection$
 
 $comment: ================================================== $
@@ -178,7 +179,9 @@ $macro: table_reference(tab)$
 `$(tab)` $expand:as_clause$ $no_eol$
 $end: table_reference$
 
-
+$macro:sub_table(sub_query)$
+($sub_query)  $expand:as_clause$ $no_eol$
+$end:sub_table$
 
 
 

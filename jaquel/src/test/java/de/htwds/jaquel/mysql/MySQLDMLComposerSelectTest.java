@@ -5,10 +5,8 @@
 package de.htwds.jaquel.mysql;
 
 import de.htwds.jaquel.DMLComposer;
-import de.htwds.jaquel.WhereClause;
-import java.util.ArrayList;
-import java.util.List;
 import junit.framework.TestCase;
+import static junit.framework.TestCase.fail;
 import org.junit.Test;
 import sqlgrammar.SQLGrammar;
 
@@ -17,7 +15,7 @@ import sqlgrammar.SQLGrammar;
  * @author Hong Phuc Bui
  * 
  */
-public class MySQLDMLComposerTest extends TestCase {
+public class MySQLDMLComposerSelectTest extends TestCase {
 	
 	
 	@Override
@@ -30,82 +28,86 @@ public class MySQLDMLComposerTest extends TestCase {
 		super.tearDown();
 	}
 
-	/**
-	 * Test of createTable method, of class DDLComposer.
-	 */
 	@Test
-	public void testVerySimpleTable() {
+	public void testSimpleSelectAll(){
 		DMLComposer p = new MySQLDMLComposer();
-		String sql = p.insertInto("aaaa", "x", "y", "z")
-				.value("11111","222222", "33333")
-				.value("11111","222222", "33333")
-				.value("11111","222222", "33333")
-				.getSQL();
-		System.out.println(sql);
-		SQLGrammar.checkSyntax(sql);
-	}
-
-	/**
-	 * Test of createTable method, of class DDLComposer.
-	 */
-	@Test
-	public void testInsertIntoTableWithStringsValue() {
-		DMLComposer p = new MySQLDMLComposer();
-		List<String> values = new ArrayList<String>();
-		values.add("1"); values.add("2"); values.add("3"); values.add("4");
-		String sql = p.insertInto("aaaa", "x", "y", "z")
-				.value(values)
-				.value("11111","222222", "33333")
-				.value(values)
-				.getSQL();
-		System.out.println(sql);
-		SQLGrammar.checkSyntax(sql);
-	}
-
-	/**
-	 * Test of createTable method, of class DDLComposer.
-	 */
-	@Test
-	public void testInsertIntoTableWithListValue() {
-		DMLComposer p = new MySQLDMLComposer();
-		List<String> values = new ArrayList<String>();
-		values.add("1"); values.add("2"); values.add("3"); values.add("4");
-		List<String> cols = new ArrayList<String>();
-		cols.add("x");
-		cols.add("y");
-		cols.add("z");
-		String sql = p.insertInto("aaaa", cols)
-				.value(values)
-				.value("11111","222222", "33333")
-				.value(values)
-				.getSQL();
-		System.out.println(sql);
-		SQLGrammar.checkSyntax(sql);
-	}
-
-	@Test
-	public void testDeleteTable(){
-		DMLComposer p = new MySQLDMLComposer();
-		String delete = p.delete("xxxx").getSQL();
-		System.out.println(delete);
-		SQLGrammar.checkSyntax(delete);
+		String sql = p.select().all("xxx", "yyy")
+					 .from("sometab")
+					.getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
+		/*
+		select * from `sometab` ;
+		 */
 	}
 	
 	@Test
-	public void testDeleteTwoTables(){
+	public void testSimpleSelect(){
 		DMLComposer p = new MySQLDMLComposer();
-		String delete = p.delete("xxxx", "yyyyy").getSQL();
-		System.out.println(delete);
-		SQLGrammar.checkSyntax(delete);
+		String sql = p.select()
+					 .from("sometab")
+					.getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
+		/*
+		select * from `sometab` ;
+		 */
 	}
+	
+	@Test
+	public void testSimpleSelectWithCols(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select(
+						p.col("aaaa").as("a")
+						.col("bbbbb").as("b")
+					)
+					 .from("sometab")
+					.getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
+		/*
+		select * from `sometab` , `somewhere_else`;
+		 */
+		sql = p.select(
+						p.col("aaaa").as("xxxx")
+					)
+					 .from("sometab")
+					.getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
 
+		sql = p.select(
+						p.col("aaaa")
+					)
+					 .from("sometab")
+					.getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
+	}
+	
+	@Test
+	public void testSimpleSelectWithTabRef(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select()
+					 .from(
+						p.tab("xxxx").as("x")
+						.tab("yyyy").as("y")
+					).getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
+		/*
+		select * from `sometab` , `somewhere_else`;
+		 */
+	}
+	
 	@Test
 	public void testSimpleAllSelect(){
 		DMLComposer p = new MySQLDMLComposer();
-		WhereClause sql = p.select().all()
-					 .from("sometab", "somewhere_else");
-					 
-		System.out.println( sql.getSQL() );
+		String sql = p.select().all()
+					 .from("sometab", "somewhere_else")
+					.getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql+";");
 		/*
 		select all * from `sometab` , `somewhere_else`;
 		 */
@@ -114,10 +116,11 @@ public class MySQLDMLComposerTest extends TestCase {
 	@Test
 	public void testSimpleDistinctSelect(){
 		DMLComposer p = new MySQLDMLComposer();
-		WhereClause sql = p.select().distinct()
-					 .from("sometab", "somewhere_else");
-					 
-		System.out.println( sql.getSQL() );
+		String sql = p.select().distinct()
+							.from("sometab", "somewhere_else")
+						   .getSQL();
+		System.out.println( sql);
+		SQLGrammar.checkSyntax(sql + ";");
 		/*
 		select distinct * from `sometab` ;
 		 */
@@ -126,45 +129,84 @@ public class MySQLDMLComposerTest extends TestCase {
 	@Test
 	public void testSimpleColumnSelect(){
 		DMLComposer p = new MySQLDMLComposer();
-		WhereClause sql = p.select("aaa", "bbbb")
-					 .from("sometab", "somewhere_else");
-					 
-		System.out.println( sql.getSQL() );
+		String sql = p.select("aaa", "bbbb")
+					 .from("sometab", "somewhere_else")
+					.getSQL();
+		System.out.println( sql);
+		SQLGrammar.checkSyntax(sql + ";");
 		/*
 		select distinct `aaa`, `bbbb` from `sometab`, `somewhere_else` ;
 		 */
+		
 	}
 	
 	@Test
 	public void testSimpleColumnInDistinctSelect(){
 		DMLComposer p = new MySQLDMLComposer();
-		WhereClause sql = p.select().distinct("aaa", "bbbb")
-					 .from("sometab", "somewhere_else");
-					 
-		System.out.println( sql.getSQL() );
+		String sql = p.select().distinct("aaa", "bbbb")
+					 .from("sometab", "somewhere_else").getSQL();
+		System.out.println( sql );
+		SQLGrammar.checkSyntax(sql + ";");
 		/*
 		select distinct `aaa`, `bbbb` from `sometab`, `somewhere_else` 
 		 */
 	}
 	
 	@Test
-	public void testSelect(){
+	public void testSelectSubTable(){
 		DMLComposer p = new MySQLDMLComposer();
-		p.select()
-			.from(
-					p.tab("xxx").as("x")
-					.tab("yyy").as("y")
-					.query(p.select("a","b")
-							.from("mytable").where(
-								"a < b and b < 10"// or something like that
-							)
-					).as("s")
-					.tab("c")
-					.tab("d")
-					.tab("xxxxx")
-			).where("some thing here")
-		.getSQL();
-		
+		String sql = p.select()
+					  .from(p.query(p.select("a","b")
+										 .from("mytable").where(
+											 "a < b and b < 10"// or something like that
+										 )
+								 ).as("s")
+					    )
+					   .where("some thing here")
+					   .getSQL();
+		System.out.println(sql);
+/* // generated code:
+select * from 
+ 			(select(`a`, `b`)
+				from `mytable` where  a < b and b < 10
+			) as `s`
+		where some thing here 
+;
+*/
+		//fail("Insert assert");
+	}
+	
+	@Test
+	public void testSelectCollectTable(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select()
+					  .from(p.tab("yyyyyyyyyyyyyy"))
+					   .where("some thing here")
+					   .getSQL();
+		System.out.println(sql);
+		SQLGrammar.checkSyntax(sql + ";");
+/* // generated code:
+select * from `yyyyyyyyyyyyyy`
+where some thing here 
+;
+*/
+	}
+	
+	@Test
+	public void testSelectCombinedTable(){
+		DMLComposer p = new MySQLDMLComposer();
+		String sql = p.select()
+						 .from(
+								 p.tab("xxx")
+								 .query(p.select("a","b")
+										 .from("mytable").where(
+											 "a < b and b < 10"// or something like that
+										 )
+								 ).as("s")
+								.tab("tttt").as("t")
+						 ).where("some thing here")
+					 .getSQL();
+		System.out.println(sql);
 /* // generated code:
 select * from 
 			  `xxx` as `x`
@@ -176,27 +218,7 @@ select * from
 			, `d`
 ;
 */
-	}
-
-	@Test
-	public void testTableRefMacro(){
-		MTableReference m = new MTableReference("xxxx");
-		m.newAsClause("x");
-		System.out.println(">>>>>>>>>>>>>" + m.toString() + "<<<<<<<<<<<<<<<<<<<");
-
-		MTableReferenceList ml = new MTableReferenceList();
-		ml.newTableReference("xxxxx");
-		ml.newTableReference("yyyyyy").newAsClause("y");
-		ml.newTableReference("tttttt");
-		System.out.println(">>>>>>>>>>>>>>>>>>" + ml.toString() + "<<<<<<<<<<<<<<<<");
-	}
-	
-	@Test
-	public void testMySQLTableReference(){
-		MySQLTableReference m = new MySQLTableReference("xxxxx");
-		m.as("x");
-		m.tab("yyyyy").as("y");
-		System.out.println(">>>>>>>>>>>>>" + m.getSQL() + "<<<<<<<<<<<<<<<<<<<");
+		fail("Insert assert");
 	}
 	
 	@Test
@@ -210,6 +232,7 @@ select * from
 		/*
 		select distinct aaaa as a, bbb as b from sometab;
 		 */	
+		SQLGrammar.checkSyntax(sql + ";");
 	}
 	
 	@Test
@@ -222,6 +245,7 @@ select * from
 					 ).from("sometab")
 					 .getSQL();
 		System.out.println(sql);
+		SQLGrammar.checkSyntax(sql + ";");
 		/*
 		select distinct `aaaa` as `a`, `bbb` as `b` from `sometab`;
 		 */	
@@ -234,6 +258,7 @@ select * from
 					 .from("sometab")
 					 .getSQL();
 		System.out.println(sql);
+		SQLGrammar.checkSyntax(sql + ";");
 		/*
 		select distinct * from sometab ;
 		 */
@@ -246,35 +271,47 @@ select * from
 					 .from("sometab")
 					 .getSQL();
 		System.out.println(sql);
+		SQLGrammar.checkSyntax(sql + ";");
 		/*
 		select distinct * from sometab ;
 		 */
 	}
-
+	
+	@Test
+	public void testMacroTableRefList(){
+		MTableReferenceList macro = new MTableReferenceList();
+		//macro.newTableReference("cccc").newAsClause("c");
+		macro.newTableCollection("`aaa` as `a`, `bbb` as `b`");
+		//macro.newSubTable("select * from `xxx`").newAsClause("x");
+		System.out.println(macro.toString());
+		//fail("temporary test");
+	}
 	
 	@Test
 	public void testSelectAllCols(){
 		DMLComposer p = new MySQLDMLComposer();
-		p.select().all(
+		String sql;
+		sql = p.select().all(
 			p.col("aaaa").as("a"). 
 			col("bbb").as("b").
 			col("c")
 		).from("sometab")
 		.getSQL();
+		System.out.println(sql);	
+		SQLGrammar.checkSyntax(sql + ";");
 /*
  select all aaaa as a, bbb as b, d from sometab ; 
 */		
-		p.select(
+		sql = p.select(
 			p.col("aaaa").as("a"). 
 			col("bbb").as("b").
 			col("c")
 		).from("sometab")
 		.getSQL();
+		System.out.println(sql);	
+		SQLGrammar.checkSyntax(sql + ";");
 /*
  select aaaa as a, bbb as b, c from sometab ;
 */		
-		p.select("1+2").getSQL();
-
-		p.select("1+2","3+4", "6 > 5").getSQL();// actung: SQL Checker kann diese noch nich parsern
 	}
 }

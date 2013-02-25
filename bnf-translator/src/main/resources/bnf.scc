@@ -1,0 +1,55 @@
+/* 
+	filename   : bnf.ssc
+	created on : Feb 25, 2013
+	description:
+*/
+
+/* define package-prefix */
+Package com.github.verylazyboy.bnf;
+
+Helpers 
+	unicode_input_character = [0 .. 0xffff];
+	letter = [['a' .. 'z']+['A'..'Z']];
+	digit = ['0'..'9'];
+	letter_or_digit = letter | digit | '_';
+	ht  = 0x0009;
+	ff  = 0x000c;
+	
+	sp = ' ';
+	tab = 9;
+	cr = 13;
+	lf = 10;
+	eol = lf | cr | cr lf;
+	
+	input_character = [unicode_input_character - [cr + lf]];
+	blank = (' ' | tab | eol)+;
+
+
+States
+	normal, input_char;
+/* 
+Normal : use character like operator
+InputChar : use character as a character in token
+*/
+
+	
+Tokens
+	multiline_comment = '--p' blank* eol+ 
+						unicode_input_character* 
+					eol+ '--/p' eol+;
+
+	oneline_comment = '--' input_character* eol;
+
+//{normal,input_char}	
+	identifier = '<' letter+ (sp letter)* '>';
+	blank = blank;
+
+{normal-> input_char}
+	assign = '::=';
+
+{input_char->normal,normal->input_char}
+	bar = '|';
+
+Ignored Tokens
+	blank;
+	

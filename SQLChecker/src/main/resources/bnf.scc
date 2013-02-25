@@ -1,0 +1,41 @@
+/* 
+	filename   : bnf.ssc
+	created on : Feb 25, 2013
+	description:
+*/
+
+/* define package-prefix */
+Package de.htwds.bnf;
+
+Helpers 
+	unicode_input_character = [0..0xffff];
+	letter = [['a' .. 'z']+['A'..'Z']];
+	digit = ['0'..'9'];
+	letter_or_digit = letter | digit | '_';
+	ht  = 0x0009;
+	ff  = 0x000c;
+	
+	sp = ' ';
+	tab = 9;
+	cr = 13;
+	lf = 10;
+	eol = lf | cr | cr lf;
+	
+	input_character = [unicode_input_character - [cr + lf]];
+	blank = (' ' | tab | eol)+;
+
+States
+	normal;
+
+	
+Tokens
+{normal}
+	oneline_comment = '--' input_character* eol?;
+	multiline_comment = '--p' eol? 
+						unicode_input_character? 
+					eol? '--/p' eol?;
+	identifier = '<' letter+ (sp letter)* letter+ '>';
+	blank = blank;
+
+Ignored Tokens
+	blank;

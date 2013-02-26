@@ -21,9 +21,18 @@ Helpers
 	lf = 10;
 	eol = lf | cr | cr lf;
 	
+	bar = '|';
+	lt = '<';
+	gt = '>';
+	question_mark = '?';
+	plus = '+';
+	star = '*';
+	metachar = bar | lt | gt | question_mark | plus | star;
+	
 	input_character = [unicode_input_character - [cr + lf]];
 	blank = (' ' | tab | eol)+;
 
+	string_char = metachar;
 
 States
 	normal, input_char;
@@ -40,15 +49,19 @@ Tokens
 
 	oneline_comment = '--' input_character* eol;
 
-//{normal,input_char}	
-	identifier = '<' letter+ (sp letter)* '>';
+{normal,input_char->normal}	
+	identifier = '<' letter+ (sp letter)* letter?'>';
+
 	blank = blank;
 
-{normal-> input_char}
+{normal->input_char, input_char->normal}
 	assign = '::=';
 
-{input_char->normal,normal->input_char}
+{normal}
 	bar = '|';
+	
+{input_char}
+	string = (letter+ )|(metachar)+;
 
 Ignored Tokens
 	blank;

@@ -1,6 +1,5 @@
 package org.sablecc.sablecc;
 
-import com.sun.org.apache.xpath.internal.compiler.PsuedoNames;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;

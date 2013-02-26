@@ -83,26 +83,27 @@ public class LexerTest extends TestCase{
 	@Test
 	public void testIdentifier() throws LexerException, IOException
 	{
-		String testString = "-- comment\n <aaaa> <aa bb><aaa bb >";
+		String testString = "-- comment\n <aaaa> <aa bb><aaa bb ><x>";
 		Lexer l = new Lexer(
 				new PushbackReader(new StringReader(testString)));
 		Token next = l.next();
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |"+ next.getText() + "|");
 		assertTrue(next instanceof TOnelineComment);
 		
 		next = l.next();
-		System.out.println(">>>>" + next.getClass().getName() + "<<<<");
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |" + next.getText() + "|");
 		assertTrue(next instanceof TBlank);
 
 		next = l.next();
-		System.out.println(">>>>" + next.getClass().getName() + "<<<<");
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |" + next.getText() +"|");
 		assertTrue(next instanceof TIdentifier);
 		
 		next = l.next();
-		System.out.println(">>>>" + next.getClass().getName() + "<<<<");
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |" + next.getText() + "|");
 		assertTrue(next instanceof TBlank);
 		
 		next = l.next();
-		System.out.println(">>>>" + next.getClass().getName() + "<<<<");
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |" + next.getText() + "|");
 		assertTrue(next instanceof TIdentifier);
 
 		try{
@@ -115,31 +116,78 @@ public class LexerTest extends TestCase{
 	}
 
 	@Test
+	public void testIdentifier2() throws LexerException, IOException
+	{
+		String testString = "<x>";
+		Lexer l = new Lexer(
+				new PushbackReader(new StringReader(testString)));
+		Token next = l.next();
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |"+ next.getText() + "|");
+		assertTrue(next instanceof TIdentifier);
+	}
+	
+	@Test
+	public void testIdentifier3() throws IOException
+	{
+		String testString = "<>";
+		Lexer l = new Lexer(
+				new PushbackReader(new StringReader(testString)));
+		Token next;
+		try {
+			next = l.next();
+			fail("Expected a lexer exception");
+		} catch (LexerException ex) {
+			System.out.println(">>>>" + ex.getToken().getClass().getName() + "<<<< |"+ ex.getToken().getText() + "|");
+		}
+		
+	}
+	
+	@Test
 	public void testTransition() throws LexerException, IOException
 	{
-		String testString = "<y>";
+		String testString = "<y>::=<x>|<z>";
 		PrintStateLexer l = 
 				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
 		Token next;
-		next = l.next();
-		System.out.println(next.getClass().getName());
-		System.out.println(l.getState().id());
-		System.out.println();
-		/*
-		next = l.next();
-		System.out.println(next.getClass().getName());
-		System.out.println(l.getState().id());
-		System.out.println();
-		
-		next = l.next();
-		System.out.println(next.getClass().getName());
-		System.out.println(l.getState().id());
-		System.out.println();
-		
-		next = l.next();
-		System.out.println(next.getClass().getName());
-		System.out.println(l.getState().id());
-		System.out.println();
-		*/
+		for(int i=0; i < 5; ++i){
+// identifier -> assign -> identifier -> bar -> identifier
+			next = l.next();
+			System.out.println(next.getClass().getName());
+			System.out.println(l.getState().id());
+			System.out.println();
+		}
+	}
+	
+	@Test
+	public void testTransition2() throws LexerException, IOException
+	{
+		String testString = "<y>::=|";
+		PrintStateLexer l = 
+				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
+		Token next;
+		for(int i=0; i < 3; ++i){
+// identifier -> assign -> string
+			next = l.next();
+			System.out.println(next.getClass().getName());
+			System.out.println(l.getState().id());
+			System.out.println();
+		}
+	}
+
+	@Test
+	public void testTransition3() throws LexerException, IOException
+	{
+		String testString = "<y>::=<|>";
+		PrintStateLexer l = 
+				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
+		Token next;
+		for(int i=0; i < 3; ++i){
+// identifier -> assign -> string
+			next = l.next();
+			System.out.println(next.getClass().getName());
+			System.out.println("|>>"+next.getText()+"<<|");
+			System.out.println(l.getState().id());
+			System.out.println();
+		}
 	}
 }

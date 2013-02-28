@@ -110,12 +110,12 @@ InputChar : use character as a character in token
 */
 	
 Tokens
-	see_the_rule = '!! (See the' input_character* eol;
+	see_the_rule = '!!'  input_character* eol;
 
 //{normal,input_char->normal}	
 	identifier = '<'letter_or_digit+ ( (sp|minus|colon)+ letter_or_digit+)* '>';
 
-token_name = cap_letter cap_letter_or_digit*;
+	token_name = cap_letter cap_letter_or_digit*;
 
 	blank = blank;
 

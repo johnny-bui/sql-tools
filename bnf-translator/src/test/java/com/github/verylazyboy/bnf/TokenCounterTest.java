@@ -25,7 +25,7 @@ public class TokenCounterTest extends TestCase{
 		
 		DataInputStream s = new DataInputStream(
                 new BufferedInputStream(
-                TokenCounterTest.class.getResourceAsStream("sql-99.bnf")));
+                TokenCounterTest.class.getResourceAsStream("sql-92.bnf")));
 		
 		PrintTokenLexer l = new PrintTokenLexer(
 				new PushbackReader(

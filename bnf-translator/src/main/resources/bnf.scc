@@ -51,19 +51,23 @@ Helpers
 	circumflex = '^';
 	underscore = '_';
 
-	metachar = bar 
-		| lt 
-		| gt 
-		| question_mark 
-		| plus 
-		| star 
+	metachar = 
+		bar 
+ 
 		| l_brace
 		|r_brace
 		| l_bracket
 		| r_bracket
-		| double_quote
-		| percent
-		| ampersand
+;
+	
+	non_letter_character = 
+		lt 
+		|gt 
+		|question_mark 
+		|plus 
+		|star
+		|percent
+		|ampersand
 		|single_quote
 		|l_parent
 		|r_parent
@@ -75,8 +79,10 @@ Helpers
 		|semicolon
 		|equal
 		|circumflex
-		|underscore;
-		
+		|underscore
+		|'\"'
+;		
+	
 	input_character = [all - [cr + lf]];
 	blank = (' ' | tab | eol)+;
 	minus_minus = '--';
@@ -94,7 +100,7 @@ Helpers
 	long_comment = 
 '--p' not_minus* '-'+ (not_minus_slash_p not_minus_slash* '-'+)* '-/p';
 	
-	string_char = letter_or_digit | dot;
+	string_char = letter_or_digit | non_letter_character;
 
 States
 	normal, input_char;
@@ -106,14 +112,14 @@ InputChar : use character as a character in token
 Tokens
 	see_the_rule = '!! (See the' input_character* eol;
 
-{normal,input_char->normal}	
+//{normal,input_char->normal}	
 	identifier = '<'letter_or_digit+ ( (sp|minus|colon)+ letter_or_digit+)* '>';
 
 token_name = cap_letter cap_letter_or_digit*;
 
 	blank = blank;
 
-{normal->input_char, input_char->normal}
+//{normal->input_char, input_char->normal}
 	assign = '::=';
 
 	l_brace = '{';
@@ -121,19 +127,20 @@ token_name = cap_letter cap_letter_or_digit*;
 
 	dot_dot_dot = '...';
 
-{normal->input_char}
+//{normal->input_char}
 	bar = '|';
 
-{normal}
+//{normal}
 	l_bracket = '[';	
 
-{normal}
+//{normal}
 	r_bracket = ']';
 
-{input_char->normal}
-	string = (letter string_char* )|(metachar+ blank);
+//{input_char->normal}
+	string = (string_char+ )
+	|(double_quote (metachar|string_char)+ double_quote);
 
-{normal,input_char->normal}
+//{normal,input_char->normal}
 	integer_number = digit+;	
 
 	oneline_comment = short_comment ;

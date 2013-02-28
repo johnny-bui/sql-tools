@@ -197,7 +197,7 @@ characters, which makes it hard to process automatically.
 
 <space> ::= !! (See the Syntax Rules)
 
-<double quote> ::= "
+<double quote> ::= "\""
 
 <percent> ::= %
 
@@ -233,9 +233,9 @@ characters, which makes it hard to process automatically.
 
 <question mark> ::= ?
 
-<left bracket> ::= [
+<left bracket> ::= "["
 
-<right bracket> ::= ]
+<right bracket> ::= "]"
 
 <circumflex> ::= ^
 
@@ -243,9 +243,9 @@ characters, which makes it hard to process automatically.
 
 <vertical bar> ::= |
 
-<left brace> ::= {
+<left brace> ::= "{"
 
-<right brace> ::= }
+<right brace> ::= "}"
 
 --h2 Literal Numbers, Strings, Dates and Times
 
@@ -4352,7 +4352,7 @@ Another is that the grammar contains rules that are usually better
 handled by the lexical analyzer than the grammar proper.
 Then there are incomplete rules such as those which reference parts 6
 to 10 (they are not defined; indeed, part 7, which was going to be
-SQL/Temporal, is in complete abeyance), and the packages (almost
+SQL Temporal, is in complete abeyance), and the packages (almost
 completely undefined in the grammar).
 It is not clear whether these can be ignored, or annotated out of the
 way.

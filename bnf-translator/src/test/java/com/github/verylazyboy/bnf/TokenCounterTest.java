@@ -36,28 +36,7 @@ public class TokenCounterTest extends TestCase{
 				t = l.next();
 			}
 		}catch(LexerException ex){
-			l.printState();
 			fail(ex.getMessage());
 		}
 	}
-
-	private static class PrintTokenLexer extends Lexer {
-
-		public PrintTokenLexer(PushbackReader pushbackReader) {
-			super(pushbackReader);
-		}
-
-		@Override
-		protected void filter() throws LexerException, IOException {
-			System.out.println("Type: " + 
-					token.getClass().getName() 
-					+ "[" + token.getLine() +"," + token.getPos() + "]"
-					+ " Text:>>>|" + token.getText()+"|<<<");
-		}
-		
-		void printState(){
-			System.out.println("!!!!!!!!!!!!!!!state:"  + this.state.id());
-		}
-	}
-	
 }

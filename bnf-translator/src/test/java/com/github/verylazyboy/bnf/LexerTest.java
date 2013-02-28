@@ -7,6 +7,7 @@ import com.github.verylazyboy.bnf.node.TBlank;
 import com.github.verylazyboy.bnf.node.TIdentifier;
 import com.github.verylazyboy.bnf.node.TMultilineComment;
 import com.github.verylazyboy.bnf.node.TOnelineComment;
+import com.github.verylazyboy.bnf.node.TString;
 import com.github.verylazyboy.bnf.node.Token;
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -197,7 +198,7 @@ public class LexerTest extends TestCase{
 	@Test
 	public void testTransition2() throws LexerException, IOException
 	{
-		String testString = "<y>::=|\n";
+		String testString = "<y>::=\"|\"\n";
 		PrintStateLexer l = 
 				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
 		Token next;
@@ -213,7 +214,7 @@ public class LexerTest extends TestCase{
 	@Test
 	public void testTransition3() throws LexerException, IOException
 	{
-		String testString = "<y>::=<|> <z>::=<aaaa>|<bbbb> | ";
+		String testString = "<y>::=\"<|>\" <z>::=<aaaa>|<bbbb> | ";
 		PrintStateLexer l = 
 				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
 		Token next;
@@ -259,5 +260,15 @@ public class LexerTest extends TestCase{
 			System.out.println(l.getState().id());
 			System.out.println();
 		}
+	}
+
+	@Test
+	public void testString() throws LexerException, IOException
+	{
+		String testString = "\"\\\"\"";
+		PrintStateLexer l = 
+				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
+		Token next = l.next();
+		assertTrue(next instanceof TString);
 	}
 }

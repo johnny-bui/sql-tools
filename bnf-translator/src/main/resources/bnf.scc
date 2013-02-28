@@ -8,10 +8,14 @@
 Package com.github.verylazyboy.bnf;
 
 Helpers 
-	unicode_input_character = [0 .. 0xffff];
+	all = [0 .. 0xffff];
 	letter = [['a' .. 'z']+['A'..'Z']];
+	cap_letter = ['A' .. 'Z'] ;
+
 	digit = ['0'..'9'];
 	letter_or_digit = letter | digit | '_';
+	cap_letter_or_digit = cap_letter | digit |'_' |'-';
+
 	ht  = 0x0009;
 	ff  = 0x000c;
 	
@@ -27,42 +31,118 @@ Helpers
 	question_mark = '?';
 	plus = '+';
 	star = '*';
-	metachar = bar | lt | gt | question_mark | plus | star;
-	
-	input_character = [unicode_input_character - [cr + lf]];
-	blank = (' ' | tab | eol)+;
+	l_brace = '{';
+	r_brace = '}';
+	l_parent = '(';
+	r_parent = ')';
+	l_bracket ='[';
+	r_bracket =']';
+	double_quote = '"';
+	percent = '%';
+	ampersand = '&';
+	single_quote = 39;
+	comma = ',';
+	dot = '.';
+	minus = '-';
+	slash = '/';
+	colon = ':';	
+	semicolon = ';';
+	equal = '=';
+	circumflex = '^';
+	underscore = '_';
 
-	string_char = metachar;
+	metachar = bar 
+		| lt 
+		| gt 
+		| question_mark 
+		| plus 
+		| star 
+		| l_brace
+		|r_brace
+		| l_bracket
+		| r_bracket
+		| double_quote
+		| percent
+		| ampersand
+		|single_quote
+		|l_parent
+		|r_parent
+		|comma
+		|dot
+		|minus
+		|slash
+		|colon
+		|semicolon
+		|equal
+		|circumflex
+		|underscore;
+		
+	input_character = [all - [cr + lf]];
+	blank = (' ' | tab | eol)+;
+	minus_minus = '--';
+
+	not_minus = [all - '-'];
+	not_minus_p = [not_minus - 'p'];
+	not_minus_slash= [ not_minus - '/'];
+	not_minus_slash_p= [ not_minus_slash  - 'p'];
+	
+	not_slash = [all-'/'];
+	not_slash_p = [not_slash - 'p'];
+
+	short_comment = '--' input_character* eol;	
+// OK understand!!!!!!!!! if we see a minus or morem we must look forward to if if the next string is "-/p" or "-XXXXXX"	
+	long_comment = 
+'--p' not_minus* '-'+ (not_minus_slash_p not_minus_slash* '-'+)* '-/p';
+	
+	string_char = letter_or_digit | dot;
 
 States
 	normal, input_char;
-/* 
+/*
 Normal : use character like operator
 InputChar : use character as a character in token
 */
-
 	
 Tokens
-	multiline_comment = '--p' blank* eol+ 
-						unicode_input_character* 
-					eol+ '--/p' eol+;
-
-	oneline_comment = '--' input_character* eol;
+	see_the_rule = '!! (See the' input_character* eol;
 
 {normal,input_char->normal}	
-	identifier = '<' letter+ (sp letter)* letter?'>';
+	identifier = '<'letter_or_digit+ ( (sp|minus|colon)+ letter_or_digit+)* '>';
+
+token_name = cap_letter cap_letter_or_digit*;
 
 	blank = blank;
 
 {normal->input_char, input_char->normal}
 	assign = '::=';
 
-{normal}
+	l_brace = '{';
+	r_brace = '}';
+
+	dot_dot_dot = '...';
+
+{normal->input_char}
 	bar = '|';
-	
-{input_char}
-	string = (letter+ )|(metachar)+;
+
+{normal}
+	l_bracket = '[';	
+
+{normal}
+	r_bracket = ']';
+
+{input_char->normal}
+	string = (letter string_char* )|(metachar+ blank);
+
+{normal,input_char->normal}
+	integer_number = digit+;	
+
+	oneline_comment = short_comment ;
+	multiline_comment = long_comment;
+
 
 Ignored Tokens
 	blank;
-	
+
+
+
+

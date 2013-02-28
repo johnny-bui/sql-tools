@@ -42,10 +42,10 @@ public class LexerTest extends TestCase{
 
 	@Test
 	public void testMultilineComment() throws LexerException, IOException{
-		String testString = "--p\n" // begin
-			+ "xxxxxxxxxxxx\n"
-			+ "--ppxxxxyyyyyyyyyyyyy\\x"	
-			+ "\n--/p\n" // end
+		String testString = 
+				"--p\n" +
+"Note that this version of this file includes the corrections from ISO 9075:1999\n" +
+"--/p"
 		;
 		System.out.println(">>>>>>>>>" + testString + "<<<<<<<<<");
 		Lexer l = new Lexer(new PushbackReader(new StringReader(testString)));
@@ -67,7 +67,7 @@ public class LexerTest extends TestCase{
 		assertTrue(next instanceof TMultilineComment);
 	}
 	
-@Test
+	@Test
 	public void testMultilineComment3() throws LexerException, IOException{
 		String testString = "--p     \n--i\n" // begin
 			+ "--\\i\n--/p\n" // end
@@ -79,6 +79,31 @@ public class LexerTest extends TestCase{
 		assertTrue(next instanceof TMultilineComment);
 	}
 
+	@Test
+	public void testMultilineComment4() throws LexerException, IOException{
+		String testString = 
+		"--p\n" +
+"--The parenthesized (i) and (n) are italic in the SQL standard.\n" +
+"--It is not clear exactly what this should look like, despite all the\n" +
+"--information.\n" +
+"--However, it is also not important; this is not really a part of the SQL\n" +
+"--language per se.\n" +
+"--Note that the package numbers are PKG001 to PKG009, for example.\n" +
+"--We still have to devise a mechanism to persuade bnf2yacc.pl to ignore\n" +
+"--this information.\n" +
+"--/p"
+		;
+		System.out.println(">>>>>>>>>" + testString + "<<<<<<<<<");
+		Lexer l = new Lexer(new PushbackReader(new StringReader(testString)));
+		try{
+			Token next = l.next();
+			System.out.println(next.getClass().getName()+ ">>>>>" + next.getText() + "<<<<<");
+			assertTrue(next instanceof TMultilineComment);
+		}catch(LexerException ex){
+			System.out.println(ex.getToken().getText());
+			fail(ex.getMessage());
+		}
+	}
 	
 	@Test
 	public void testIdentifier() throws LexerException, IOException
@@ -143,6 +168,17 @@ public class LexerTest extends TestCase{
 	}
 	
 	@Test
+	public void testIdentifier4() throws IOException, LexerException
+	{
+		String testString = "<SQL object identifier>";
+		Lexer l = new Lexer(
+				new PushbackReader(new StringReader(testString)));
+		Token next = l.next();
+		System.out.println(">>>>" + next.getClass().getName() + "<<<< |"+ next.getText() + "|");
+		assertTrue(next instanceof TIdentifier);
+	}
+	
+	@Test
 	public void testTransition() throws LexerException, IOException
 	{
 		String testString = "<y>::=<x>|<z>";
@@ -161,7 +197,7 @@ public class LexerTest extends TestCase{
 	@Test
 	public void testTransition2() throws LexerException, IOException
 	{
-		String testString = "<y>::=|";
+		String testString = "<y>::=|\n";
 		PrintStateLexer l = 
 				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
 		Token next;
@@ -177,15 +213,49 @@ public class LexerTest extends TestCase{
 	@Test
 	public void testTransition3() throws LexerException, IOException
 	{
-		String testString = "<y>::=<|>";
+		String testString = "<y>::=<|> <z>::=<aaaa>|<bbbb> | ";
 		PrintStateLexer l = 
 				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
 		Token next;
-		for(int i=0; i < 3; ++i){
+		for(int i=0; i < 12; ++i){
 // identifier -> assign -> string
 			next = l.next();
 			System.out.println(next.getClass().getName());
-			System.out.println("|>>"+next.getText()+"<<|");
+			System.out.println("***"+next.getText()+"***");
+			System.out.println(l.getState().id());
+			System.out.println();
+		}
+	}
+
+	@Test
+	public void testTransition4() throws LexerException, IOException
+	{
+		String testString = "<y>::={{{{ <z>::=<aaaa>|<bbbb>";
+		PrintStateLexer l = 
+				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
+		Token next;
+		for(int i=0; i < 9; ++i){
+// identifier -> assign -> string
+			next = l.next();
+			System.out.println(next.getClass().getName());
+			System.out.println("***"+next.getText()+"***");
+			System.out.println(l.getState().id());
+			System.out.println();
+		}
+	}
+
+	@Test
+	public void testTransition5() throws LexerException, IOException
+	{
+		String testString = "<y>::=[ <a> ]";
+		PrintStateLexer l = 
+				new PrintStateLexer(new PushbackReader(new StringReader(testString)));
+		Token next;
+		for(int i=0; i < 7; ++i){
+// identifier -> assign -> string
+			next = l.next();
+			System.out.println(next.getClass().getName());
+			System.out.println("***"+next.getText()+"***");
 			System.out.println(l.getState().id());
 			System.out.println();
 		}

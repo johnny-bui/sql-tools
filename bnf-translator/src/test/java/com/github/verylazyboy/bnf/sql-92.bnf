@@ -413,7 +413,7 @@ The plain text version of this grammar is
 
 <less than or equals operator> ::= <=
 
-<concatenation operator> ::= ||
+<concatenation operator> ::= "||"
 
 <double period> ::= ..
 

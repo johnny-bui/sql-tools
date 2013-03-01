@@ -1,13 +1,11 @@
 package com.github.verylazyboy.bnf;
 
-import com.github.verylazyboy.bnf.lexer.Lexer;
 import com.github.verylazyboy.bnf.lexer.LexerException;
 import com.github.verylazyboy.bnf.node.EOF;
 import com.github.verylazyboy.bnf.node.Token;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import junit.framework.TestCase;

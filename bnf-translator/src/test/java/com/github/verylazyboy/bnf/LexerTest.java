@@ -109,6 +109,7 @@ public class LexerTest extends TestCase{
 	@Test
 	public void testIdentifier() throws LexerException, IOException
 	{
+		//String testString = "-- comment\n <aaaa> <aa bb><aaa bb ><x>";
 		String testString = "-- comment\n <aaaa> <aa bb><aaa bb ><x>";
 		Lexer l = new Lexer(
 				new PushbackReader(new StringReader(testString)));
@@ -133,10 +134,12 @@ public class LexerTest extends TestCase{
 		assertTrue(next instanceof TIdentifier);
 
 		try{
-			l.next();
-			l.next();
-			fail("expected here a LexerException");
+			next = l.next();
+			next = l.next();
+			fail("expected here an Exception but got token: " + next.getClass().getName());
 		}catch (LexerException ex){
+			System.out.println(ex);
+		}catch(IOException ex){
 			System.out.println(ex);
 		}
 	}
@@ -153,20 +156,22 @@ public class LexerTest extends TestCase{
 	}
 	
 	@Test
-	public void testIdentifier3() throws IOException
+	public void testIdentifier3() 
 	{
-		String testString = "<>";
+		String testString = "<aaa ab >";
 		Lexer l = new Lexer(
 				new PushbackReader(new StringReader(testString)));
 		Token next;
 		try {
 			next = l.next();
-			fail("Expected a lexer exception");
+			fail("Expected a lexer exception but get Token: " + next.getClass().getName());
 		} catch (LexerException ex) {
 			System.out.println(">>>>" + ex.getToken().getClass().getName() + "<<<< |"+ ex.getToken().getText() + "|");
+		}catch(IOException ex){
+			System.out.println(">>>>" + ex.toString() + "<<<< |");
 		}
-		
 	}
+	
 	
 	@Test
 	public void testIdentifier4() throws IOException, LexerException

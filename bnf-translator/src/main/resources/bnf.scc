@@ -96,7 +96,8 @@ Helpers
 	not_slash_p = [not_slash - 'p'];
 
 	short_comment = '--' input_character* eol;	
-// OK understand!!!!!!!!! if we see a minus or morem we must look forward to if if the next string is "-/p" or "-XXXXXX"	
+// OK understand!!!!!!!!! if we see a minus or morem we must look forward 
+// to if if the next string is "-/p" or "-XXXXXX"	
 	long_comment = 
 '--p' not_minus* '-'+ (not_minus_slash_p not_minus_slash* '-'+)* '-/p';
 	
@@ -113,7 +114,8 @@ Tokens
 	see_the_rule = '!!'  input_character* eol;
 
 //{normal,input_char->normal}	
-	identifier = '<'letter_or_digit+ ( (sp|minus|colon)+ letter_or_digit+)* '>';
+	identifier = 
+'<' letter_or_digit+ ( (sp|minus|colon)+ letter_or_digit+)* '>';
 
 	token_name = cap_letter cap_letter_or_digit*;
 

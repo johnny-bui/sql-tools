@@ -1,0 +1,3 @@
+<national character string literal> ::=
+		N <quote> [ <character representation> ... ] <quote> [ { <separator>... <quote> [ <character representation>... ] <quote> }... ]
+;

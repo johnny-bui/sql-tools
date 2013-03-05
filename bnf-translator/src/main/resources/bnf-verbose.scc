@@ -156,74 +156,44 @@ Productions
 	productions = prod+;
 	prod = 	
 		identifier assign alts product_sep
-		{->New prod(identifier, [alts.list_alt])}
 	;
 
 	alts 
-		{-> [list_alt]:alt*}
 	= alt [tail]:alts_tail*
-		{->[alt, tail.alt]}
-	
+	| {s_t_r} see_the_rule
 	;
 
 	alt = 
 		elem* 
 	;
-	alts_tail {->alt} = bar alt{->alt};
+	alts_tail = bar alt;
 
 	elem =
-		{term} term {->term.elem}
+		{term} term 
 		|{option} l_bracket options r_bracket
-			{->New elem.option([options.list_opt])}
 	;
 
-	options {->[list_opt]:option*} = 
+	options = 
 		 option [tail]:options_tail*
-		{->[option, tail.option]}
 	;
 
 	option = 
 		elem+ 
 	;
-	options_tail{->option} 
-	= bar option {->option};
+	options_tail= bar option;
+	
 
 
-	term {->elem} =
+	term  =
 		{factor} factor 
-			{-> factor.elem}
 		|{factor_list} factor dot_dot_dot
-			{-> New elem.list(factor.elem)}
 	;
 
 
-	factor {->[elem]:elem} =
-		{id} [id]:identifier {-> New elem.id(id)}
-		| {str} [str]:string {-> New elem.str(str)}
-		| {token} token_name{->New elem.token(token_name)}
+	factor  =
+		{id} [id]:identifier 
+		| {str} [str]:string
+		| {token} token_name
 		| {block} l_brace options r_brace
-			{-> New elem.option([options.list_opt])}
-		| {s_t_r} [str]:see_the_rule
-			{-> New elem.s_t_r(str)}
 	;
-
-
-Abstract Syntax Tree
-	productions = prod+;
-	prod = 	
-		identifier alt*
-	;
-	
-	alt =  elem* | {s_t_r} ;
-
-	elem =
-		{id} identifier
-		|{str} string
-		|{token} token_name
-		|{list} elem
-		|{option} option*
-		|{s_t_r} see_the_rule
-	;
-	
-	option = elem+;
 

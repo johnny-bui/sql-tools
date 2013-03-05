@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *
+ * Filter keywords or tokens of sql 92 in html file.
  * @author hbui
  */
 public class Filter {

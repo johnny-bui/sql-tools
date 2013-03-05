@@ -1,0 +1,5 @@
+<table definition>    ::=
+         CREATE [ { GLOBAL | LOCAL } TEMPORARY ] TABLE <table name> 
+			<table element list> 
+		[ ON COMMIT { DELETE} | {PRESERVE } ROWS ] 
+;

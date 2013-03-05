@@ -163,7 +163,8 @@ Productions
 		{-> [list_alt]:alt*}
 	= alt [tail]:alts_tail*
 		{->[alt, tail.alt]}
-	
+	| {s_t_r} see_the_rule
+		{-> []}
 	;
 
 	alt = 
@@ -203,8 +204,6 @@ Productions
 		| {token} token_name{->New elem.token(token_name)}
 		| {block} l_brace options r_brace
 			{-> New elem.option([options.list_opt])}
-		| {s_t_r} [str]:see_the_rule
-			{-> New elem.s_t_r(str)}
 	;
 
 
@@ -222,7 +221,6 @@ Abstract Syntax Tree
 		|{token} token_name
 		|{list} elem
 		|{option} option*
-		|{s_t_r} see_the_rule
 	;
 	
 	option = elem+;

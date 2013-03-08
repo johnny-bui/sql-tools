@@ -156,62 +156,64 @@ Productions
 
 	token_def = 	
 		identifier assign alts product_sep
+		{->New token_def(identifier, [alts.list_alt])}
 	;
 
 	////////////////////////////////////////////////////////////////////////////////
 	productions = T.production prod+;
 	prod = 	
 		identifier assign alts product_sep
+		{->New prod(identifier, [alts.list_alt])}
 	;
 
 	alts 
+		{-> [list_alt]:alt*}
 	= alt [tail]:alts_tail*
+		{->[alt, tail.alt]}
 	;
 
 	alt = 
 		elem* 
 	;
-	alts_tail 
-	= bar alt
-	;
+	alts_tail {->alt} = bar alt{->alt};
 
 	elem =
-		{term} repeated_term
-		|{option} l_bracket repeated_term r_bracket
+		{term} term {->term.elem}
+		|{option} l_bracket options r_bracket
+			{->New elem.option([options.list_opt])}
 	;
 
-	options  = 
+	options {->[list_opt]:option*} = 
 		 option [tail]:options_tail*
+		{->[option, tail.option]}
 	;
 
 	option = 
 		elem+ 
 	;
-	options_tail
-	= bar option ;
-	
-	repeated_term =
-		{one} term 
-		|{more} term dot_dot_dot
-	;
+	options_tail{->option} 
+	= bar option {->option};
 
 
-	term =
+	term {->elem} =
 		{factor} factor 
-		|{option} term bar factor 
+			{-> factor.elem}
+		|{factor_list} factor dot_dot_dot
+			{-> New elem.list(factor.elem)}
 	;
 
 
-	factor 
-	=
-		{id} [id]:identifier 
-		| {str} [str]:string 
-		| {token} token_name
-		| {block} l_brace [elems]:elem r_brace
+	factor {->[elem]:elem} =
+		{id} [id]:identifier {-> New elem.id(id)}
+		| {str} [str]:string {-> New elem.str(str)}
+		| {token} token_name{->New elem.token(token_name)}
+		| {block} l_brace options r_brace
+			{-> New elem.option([options.list_opt])}
 		| {s_t_r} [str]:see_the_rule
+			{-> New elem.s_t_r(str)}
 	;
 
-/*
+
 Abstract Syntax Tree
 	grammar = 
 		tokens ?
@@ -235,7 +237,6 @@ Abstract Syntax Tree
 		|{token} token_name
 		|{list} elem
 		|{option} option*
-		|{block} elem+
 		|{s_t_r} see_the_rule
 	;
 	
@@ -244,4 +245,4 @@ Abstract Syntax Tree
 	token_def =
 		identifier alt*
 	;
-*/	
+	

@@ -5,7 +5,6 @@ import com.github.verylazyboy.bnf.lexer.Lexer;
 import com.github.verylazyboy.bnf.lexer.LexerException;
 import com.github.verylazyboy.bnf.node.TBlank;
 import com.github.verylazyboy.bnf.node.TIdentifier;
-import com.github.verylazyboy.bnf.node.TMultilineComment;
 import com.github.verylazyboy.bnf.node.TOnelineComment;
 import com.github.verylazyboy.bnf.node.TString;
 import com.github.verylazyboy.bnf.node.Token;
@@ -27,90 +26,21 @@ public class LexerTest extends TestCase{
 	public void testOnlineComment() throws LexerException, IOException
 	{
 		Lexer l = new Lexer(
-				new PushbackReader(new StringReader("--xxxxxx\n -- yyyyyyy\n")));
+			new PushbackReader(new StringReader("// s\n//\n")));
 		
 		Token next = l.next();
 		assertTrue(next instanceof TOnelineComment);
 		
-		next = l.next();
-		System.out.println(">>>>" + next.getClass().getName() + "<<<<");
-		assertTrue(next instanceof TBlank);
 
 		next = l.next();
 		System.out.println(">>>>" + next.getClass().getName() + "<<<<");
 		assertTrue(next instanceof TOnelineComment);
-	}
-
-	@Test
-	public void testMultilineComment() throws LexerException, IOException{
-		String testString = 
-				"--p\n" +
-"Note that this version of this file includes the corrections from ISO 9075:1999\n" +
-"--/p"
-		;
-		System.out.println(">>>>>>>>>" + testString + "<<<<<<<<<");
-		Lexer l = new Lexer(new PushbackReader(new StringReader(testString)));
-		Token next = l.next();
-		System.out.println(next.getClass().getName()+ ">>>>>" + next.getText() + "<<<<<");
-		assertTrue(next instanceof TMultilineComment);
-	}
-
-	@Test
-	public void testMultilineComment2() throws LexerException, IOException{
-		String testString = "--p\n" // begin
-			+ "\n\n\n\n\n"
-			+ "\n--/p\n" // end
-		;
-		System.out.println(">>>>>>>>>" + testString + "<<<<<<<<<");
-		Lexer l = new Lexer(new PushbackReader(new StringReader(testString)));
-		Token next = l.next();
-		System.out.println(next.getClass().getName()+ ">>>>>" + next.getText() + "<<<<<");
-		assertTrue(next instanceof TMultilineComment);
-	}
-	
-	@Test
-	public void testMultilineComment3() throws LexerException, IOException{
-		String testString = "--p     \n--i\n" // begin
-			+ "--\\i\n--/p\n" // end
-		;
-		System.out.println(">>>>>>>>>" + testString + "<<<<<<<<<");
-		Lexer l = new Lexer(new PushbackReader(new StringReader(testString)));
-		Token next = l.next();
-		System.out.println(next.getClass().getName()+ ">>>>>" + next.getText() + "<<<<<");
-		assertTrue(next instanceof TMultilineComment);
-	}
-
-	@Test
-	public void testMultilineComment4() throws LexerException, IOException{
-		String testString = 
-		"--p\n" +
-"--The parenthesized (i) and (n) are italic in the SQL standard.\n" +
-"--It is not clear exactly what this should look like, despite all the\n" +
-"--information.\n" +
-"--However, it is also not important; this is not really a part of the SQL\n" +
-"--language per se.\n" +
-"--Note that the package numbers are PKG001 to PKG009, for example.\n" +
-"--We still have to devise a mechanism to persuade bnf2yacc.pl to ignore\n" +
-"--this information.\n" +
-"--/p"
-		;
-		System.out.println(">>>>>>>>>" + testString + "<<<<<<<<<");
-		Lexer l = new Lexer(new PushbackReader(new StringReader(testString)));
-		try{
-			Token next = l.next();
-			System.out.println(next.getClass().getName()+ ">>>>>" + next.getText() + "<<<<<");
-			assertTrue(next instanceof TMultilineComment);
-		}catch(LexerException ex){
-			System.out.println(ex.getToken().getText());
-			fail(ex.getMessage());
-		}
 	}
 	
 	@Test
 	public void testIdentifier() throws LexerException, IOException
 	{
-		//String testString = "-- comment\n <aaaa> <aa bb><aaa bb ><x>";
-		String testString = "-- comment\n <aaaa> <aa bb><aaa bb ><x>";
+		String testString = "// comment\n <aaaa> <aa bb><aaa bb ><x>";
 		Lexer l = new Lexer(
 				new PushbackReader(new StringReader(testString)));
 		Token next = l.next();

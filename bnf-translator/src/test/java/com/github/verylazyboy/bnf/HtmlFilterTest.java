@@ -7,10 +7,10 @@ import org.junit.Test;
  *
  * @author hbui
  */
-public class FilterTest extends TestCase{
+public class HtmlFilterTest extends TestCase{
 	@Test
 	public void testFilter(){
-		Filter f = new Filter();
-		f.filte();
+		HtmlFilter f = new HtmlFilter();
+		f.filter();
 	}
 }

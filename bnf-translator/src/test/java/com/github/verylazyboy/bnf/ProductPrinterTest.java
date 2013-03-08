@@ -16,18 +16,18 @@ import org.junit.Test;
  * @author hbui
  * @version 04.03.2012
  */
-public class TestParseAll extends TestCase{
+public class ProductPrinterTest extends TestCase{
 	@Test
 	public void testPrint() throws Exception{
 		DataInputStream s = new DataInputStream(
-				new BufferedInputStream(
-					TestParseAll.class.getResourceAsStream("sql-03.bnf")));
+                new BufferedInputStream(
+                ProductPrinterTest.class.getResourceAsStream("sql-03.bnf")));
 		Lexer l = new Lexer(
 				new PushbackReader(
 				new InputStreamReader(s)));
 		try{
-			Parser p = new Parser(l);
-				
+			Parser p =
+				new Parser(l);
 			Start tree = p.parse();
 			ProductionPrinter printer = new ProductionPrinter();
 			tree.apply(printer);

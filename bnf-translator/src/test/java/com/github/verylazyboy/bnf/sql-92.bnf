@@ -74,6 +74,8 @@ The plain text version of this grammar is
 //h2 Basic Definitions of Characters Used, Tokens, Symbols, Etc.
 ///h2
 
+Tokens
+
 <SQL terminal character> ::=
 		<SQL language character>
 	|	<SQL embedded language character>
@@ -149,11 +151,11 @@ The plain text version of this grammar is
 ;
 <semicolon> ::= ";"
 ;
-<less than operator> ::= <
+<less than operator> ::= "<"
 ;
 <equals operator> ::= =
 ;
-<greater than operator> ::= >
+<greater than operator> ::= ">"
 ;
 <question mark> ::= ?
 ;
@@ -407,11 +409,11 @@ The plain text version of this grammar is
 	|	<minutes value> [ <colon> <seconds value> ]
 	|	<seconds value>
 ;
-<not equals operator> ::= <>
+<not equals operator> ::= "<>"
 ;
-<greater than or equals operator> ::= >=
+<greater than or equals operator> ::= ">="
 ;
-<less than or equals operator> ::= <=
+<less than or equals operator> ::= "<="
 ;
 <concatenation operator> ::= "||"
 ;
@@ -420,6 +422,8 @@ The plain text version of this grammar is
 //hr
 //h2 SQL Module
 ///h2
+
+Productions
 
 <module> ::=
 		<module name clause> <language clause> <module authorization clause>

@@ -24,7 +24,8 @@ public class ProductionPrinter extends DepthFirstAdapter{
 
 			@Override
 			public String format(Token token) {
-				return token.getClass().getSimpleName() + " " + token.getText();
+				return token.getClass().getSimpleName() + " " + token.getText() 
+						+ " [" + token.getLine() + "," + token.getPos() + "]";
 			}
 
 			@Override

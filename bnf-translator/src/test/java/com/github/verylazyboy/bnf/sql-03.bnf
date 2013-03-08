@@ -94,6 +94,9 @@ characters, which makes it hard to process automatically.
 // h3 5.1 <SQL terminal character> (p151)
 // /h3
 
+Tokens
+
+
 <SQL terminal character> ::= <SQL language character>
 ;
 <SQL language character> ::= <simple Latin letter> | <digit> | <SQL special character>
@@ -166,11 +169,11 @@ characters, which makes it hard to process automatically.
 ;
 <semicolon> ::= ";"
 ;
-<less than operator> ::= <
+<less than operator> ::= "<"
 ;
 <equals operator> ::= =
 ;
-<greater than operator> ::= >
+<greater than operator> ::= ">"
 ;
 <question mark> ::= ?
 ;
@@ -246,7 +249,7 @@ Previous standard said:
 ;
 <multiplier> ::= K | M | G
 ;
-<delimited identifier> ::= <double quote> <delimited identifier body> <double quote>
+<delimited identifier> ::= <double quote><delimited identifier body> <double quote>
 ;
 <delimited identifier body> ::= <delimited identifier part>... 
 ;
@@ -435,7 +438,7 @@ arbitrary white space.
 ;
 <double period> ::= <period> <period>
 ;
-<separator> ::= { <comment> | <white space> }...
+<separator> ::= { [<comment> | <white space>] } ...
 ;
 <comment> ::= <simple comment> | <bracketed comment>
 ;
@@ -460,7 +463,7 @@ This probably says something about the <slash> <asterisk> and <asterisk>
 ;
 <bracketed comment terminator> ::= <asterisk> <slash>
 ;
-<bracketed comment contents> ::= [ { <comment character> | <separator> }... ]
+<bracketed comment contents> ::= [ { <comment character> | <separator>  }... ]
 ;
 <comment character> ::= <nonquote character> | <quote>
 ;
@@ -1132,7 +1135,7 @@ grammar.
 <actual identifier> ::= <regular identifier> | <delimited identifier>
 ;
 <SQL language identifier> ::=
-		<SQL language identifier start> [ { <underscore> | <SQL language identifier part> }... ]
+		<SQL language identifier start> [ { <underscore> | <SQL language identifier part> } ... ]
 ;
 <SQL language identifier start> ::= <simple Latin letter>
 ;
@@ -1242,6 +1245,8 @@ grammar.
 
 // h3 6.1 <data type> (p161)
 // /h3
+
+Productions
 
 <data type> ::=
 		<predefined type>
@@ -5300,7 +5305,8 @@ set.
 		SET COLLATION <collation specification> [ FOR <character set specification list> ]
 	|	SET NO COLLATION [ FOR <character set specification list> ]
 ;
-<character set specification list> ::= <character set specification> [ , <character set specification>... ]
+<character set specification list> ::= 
+	<character set specification> [ {<comma> <character set specification> }... ]
 ;
 <collation specification> ::= <value specification>
 ;
@@ -5701,7 +5707,7 @@ Specify an <embedded SQL host program>.
 	|	<handler declaration>
 	|	<SQL procedure statement>
 ;
-<SQL prefix> ::= EXEC SQL | <ampersand>SQL<left paren>
+<SQL prefix> ::= EXEC SQL | <ampersand> SQL <left paren>
 ;
 <SQL terminator> ::= END-EXEC | <semicolon> | <right paren>
 ;
@@ -5806,7 +5812,7 @@ Specify an <embedded SQL Ada program>.
 ;
 <Ada initial value> ::= <Ada assignment operator> <character representation>...
 ;
-<Ada assignment operator> ::= <colon><equals operator>
+<Ada assignment operator> ::= <colon> <equals operator>
 ;
 <Ada host identifier> ::= !! See the Syntax Rules.
 ;
@@ -6067,7 +6073,7 @@ Specify an <embedded SQL COBOL program>.
 ;
 <COBOL integer type> ::= <COBOL binary integer>
 ;
-<COBOL binary integer> ::= { PIC | PICTURE } [ IS ] S<COBOL nines> [ USAGE [ IS ] ] BINARY
+<COBOL binary integer> ::= { PIC | PICTURE } [ IS ] S <COBOL nines> [ USAGE [ IS ] ] BINARY
 ;
 <COBOL nines> ::= { 9 [ <left paren> <length> <right paren> ] }...
 ;
@@ -6258,7 +6264,7 @@ Specify an <embedded SQL PL I program>.
 <PL I host identifier> ::= !! See the Syntax Rules.
 ;
 <PL I type specification> ::=
-		{ CHAR | CHARACTER } [ VARYING ] <left paren><length><right paren> [ CHARACTER SET [ IS ] <character set specification> ]
+		{ CHAR | CHARACTER } [ VARYING ] <left paren> <length> <right paren> [ CHARACTER SET [ IS ] <character set specification> ]
 	|	<PL I type fixed decimal> <left paren> <precision> [ <comma> <scale> ] <right paren>
 	|	<PL I type fixed binary> [ <left paren> <precision> <right paren> ]
 	|	<PL I type float binary> <left paren> <precision> <right paren>

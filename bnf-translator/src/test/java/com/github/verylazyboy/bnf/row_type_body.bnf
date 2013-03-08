@@ -1,0 +1,9 @@
+
+Productions
+
+<row type body>    ::=   
+	<left paren> 
+		<field definition> 
+		[ { <comma> <field definition> }... ] 
+	<right paren>
+;

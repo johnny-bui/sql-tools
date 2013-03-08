@@ -1,18 +1,6 @@
-/*
-<concatenation operator> ::= "||"
-;
-<less than or equals operator> ::= <=
-;*/
-<language name> ::= ADA | {C|C++} | COBOL | FORTRAN | MUMPS | PASCAL | PLI
-;
-/*
-<revoke statement> ::=
-		REVOKE [ GRANT OPTION FOR ] <privileges> ON <object name>
-			FROM <grantee> [ { <comma> <grantee> }... ] <drop behaviour>
-;
-*/
-/*
-<set constraints mode statement> ::=
-		SET CONSTRAINTS <constraint name list> { DEFERRED | IMMEDIATE }
-;
-*/
+
+
+Productions
+
+<character set specification list> ::= 
+	<character set specification> [ , <character set specification>... ];

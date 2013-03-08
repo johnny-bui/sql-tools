@@ -17,9 +17,7 @@ import org.junit.Test;
  */
 public class TokenCounterTest extends TestCase{
 	@Test
-	public void testsql99() throws LexerException, IOException{
-		//InputStream bnfTestStrean = 
-		//		TokenCounterTest.class.getResourceAsStream("sql-99.bnf");
+	public void testsql92() throws LexerException, IOException{
 		
 		DataInputStream s = new DataInputStream(
                 new BufferedInputStream(

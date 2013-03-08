@@ -3,3 +3,5 @@
 /sablecc-maven-plugin/target/
 /sablecc-maven-plugin-test/target/
 /SQLComposer/target/
+/bnf-transtlator/target/
+/bnf-translator/target/

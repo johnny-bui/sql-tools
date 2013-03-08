@@ -57,7 +57,7 @@ Helpers
 	line_terminator = lf | cr | cr lf;
 	string_literal = '"' string_character* '"';	
 
-
+	
 /* define token */
 Tokens
 	l_par = '(';
@@ -70,6 +70,10 @@ Tokens
 	minus = '-';
 	star = '*';
 	slash = '/';
+	less_than = '<';
+	greater_than = '>';
+	less_than_eq = '<=';
+	greater_than_eq = '>=';
 
 	floating_point_number = digit+ dot digit*;
 	integer_number = number;
@@ -116,10 +120,22 @@ Tokens
 	all = a l l;
 	where = w h e r e;
 
+// Boolean key
+	or = o r;
+	and = a n d;
+	is = i s;
+	true = t r u e;
+	false = f a l s e;
+	unknow = u n k n o w;
+
+
 	auto = a u t o ;
 	increment = i n c r e m e n t;
 	my_isam = 'MyISAM';
 	inno_db = 'InnoDB';	
+	
+	unsupported_yet = 'unsuported_yet';
+	
 	table_type= engine | type;
 	blank = (' ' | 13 | 10 | 9)+;
 	var = at letter letter_or_digit+;
@@ -127,6 +143,7 @@ Tokens
 	identifier = (backquote letter letter_or_digit* backquote) | (letter letter_or_digit*);
 	oneline_comment = '--' input_character* line_terminator?;
 	string_literal = '"' string_character* '"';
+
 
 /* Token to be ignored */
 Ignored Tokens
@@ -151,7 +168,7 @@ Productions
 	if_not_exists = if not exists;
 
 	table_definition =
-		l_par col_def addition_col_def* table_constraint_tail* r_par;
+		l_par col_def addition_col_def* table_constraint_list* r_par;
 	
 	col_def = identifier data_type col_constraint*;
 
@@ -286,4 +303,225 @@ Productions
 		|{subquery} l_par select_clausel r_par alias;
 	more_table_ref = comma table_ref;	
 	
-	where_clausel = where;	
+	where_clausel = where search_condition;	
+
+	search_condition = boolean_value_expression;
+
+	boolean_value_expression =
+		{term} boolean_term
+		|{or} boolean_value_expression or boolean_term
+	;
+	boolean_term =
+		boolean_factor
+		|{and} boolean_term and boolean_factor
+	;
+	boolean_factor = not? boolean_test;
+	boolean_test = boolean_primary is_not_clause?;
+	is_not_clause = is not? truth_value;
+	
+	truth_value =
+		{true} true
+		|{false} false
+		|{unkonw} unknow
+	;
+
+	boolean_primary =
+		{predicate} predicate
+		|{boolean} boolean_predicand
+	;
+	
+	boolean_predicand =
+		{parenthesized} parenthesized_boolean_value_expression
+		|{nonparenthesized} nonparenthesized_value_expression_primary
+	;
+
+	parenthesized_boolean_value_expression    =   l_par boolean_value_expression r_par;
+
+//	<predicate>	::=
+//		 <comparison predicate>
+//	 |	 <between predicate>
+//	 |	 <in predicate>
+//	 |	 <like predicate>
+//	 |	 <similar predicate>
+//	 |	 <null predicate>
+//	 |	 <quantified comparison predicate>
+//	 |	 <exists predicate>
+//	 |	 <unique predicate>
+//	 |	 <normalized predicate>
+//	 |	 <match predicate>
+//	 |	 <overlaps predicate>
+//	 |	 <distinct predicate>
+//	 |	 <member predicate>
+//	 |	 <submultiset predicate>
+//	 |	 <set predicate>
+//	 |	 <type predicate>
+
+	predicate =
+		comparison_predicate
+	;
+
+
+// <comparison predicate>	::=   <row value predicand> <comparison predicate part 2>
+//
+//<comparison predicate part 2>	::=   <comp op> <row value predicand>
+//
+//<comp op>	::=
+//		 <equals operator>
+//	 |	 <not equals operator>
+//	 |	 <less than operator>
+//	 |	 <greater than operator>
+//	 |	 <less than or equals operator>
+//	 |	 <greater than or equals operator> 
+	comparison_predicate = 
+		row_value_predicand comparison_predicate_tail
+	;
+
+	comparison_predicate_tail =
+		{eq} equal
+		|{neq} not equal
+		|{lt} less_than
+		|{gt} greater_than
+		|{lteq} less_than_eq
+		|{gteq} greater_than_eq
+	;
+
+//	<row value predicand>	::=
+//		 <row value special case>
+//	 |	 <row value constructor predicand>
+		
+	row_value_predicand	=
+		{special} row_value_special_case
+		|{constructor} row_value_constructor_predicand
+	;
+	
+// <row value special case>    ::=   <nonparenthesized value expression primary> 
+	row_value_special_case = nonparenthesized_value_expression_primary;
+	
+//<nonparenthesized value expression primary>	::=
+//		 <unsigned value specification>
+//	 |	 <column reference>
+//	 |	 <set function specification>
+//	 |	 <window function>
+//	 |	 <scalar subquery>
+//	 |	 <case expression>
+//	 |	 <cast specification>
+//	 |	 <field reference>
+//	 |	 <subtype treatment>
+//	 |	 <method invocation>
+//	 |	 <static method invocation>
+//	 |	 <new specification>
+//	 |	 <attribute or method reference>
+//	 |	 <reference resolution>
+//	 |	 <collection value constructor>
+//	 |	 <array element reference>
+//	 |	 <multiset element reference>
+//	 |	 <routine invocation>
+//	 |	 <next value expression>	
+	
+
+	nonparenthesized_value_expression_primary = 
+		{unsigned} unsigned_value_specification
+		|{colref} column_reference
+	;	
+
+//<row value constructor predicand>    ::=
+//         <common value expression>
+//     |     <boolean predicand>
+//     |     <explicit row value constructor>
+
+
+	row_value_constructor_predicand =
+		 {common}common_value_expression
+		|{predicant} boolean_predicand
+		|{constructor} explicit_row_value_constructor
+	;
+
+	
+//	 <unsigned value specification>    ::=   <unsigned literal> | <general value specification> 
+	unsigned_value_specification =
+		{literal} unsigned_literal
+		|{genral} general_value_specification
+	;
+	
+//  <unsigned literal>    ::=   <unsigned numeric literal> | <general literal> 
+	unsigned_literal =
+		{numneric}unsigned_numeric_literal 
+		|{general} general_literal
+	;
+
+//  <unsigned numeric literal>    ::=   <exact numeric literal> | <approximate numeric literal> 
+	unsigned_numeric_literal =
+		{exact} exact_numeric_literal
+		|{approximate} approximate_numneric_literal
+	;
+
+//<exact numeric literal>    ::=
+//         <unsigned integer> [ <period> [ <unsigned integer> ] ]
+//     |     <period> <unsigned integer>
+
+	exact_numeric_literal =
+		{floating_point} floating_point_number
+	;
+
+//<common value expression>    ::=
+//         <numeric value expression>
+//     |     <string value expression>
+//     |     <datetime value expression>
+//     |     <interval value expression>
+//     |     <user-defined type value expression>
+//     |     <reference value expression>
+//     |     <collection value expression>
+
+	common_value_expression =
+		{numeric} numeric_value_expression
+		|{string} string_value_expression
+		|{datetime} datetime_value_expression
+	;
+
+	// <numeric value expression>    ::=
+//         <term>
+//     |     <numeric value expression> <plus sign> <term>
+//     |     <numeric value expression> <minus sign> <term>
+	numeric_value_expression =
+		{term} term
+		|{add} numeric_value_expression plus_sign term
+		|{sub} numeric_value_expression minus_sign term
+	;
+
+//<term>    ::=
+//         <factor>
+//     |     <term> <asterisk> <factor>
+//     |     <term> <solidus> <factor>
+//	term =
+//		{factor} factor
+//		|{mul} term asterisk factor
+//		|{div} term solidus factor
+//	;
+	
+//<factor>    ::=   [ <sign> ] <numeric primary>
+//	factor = sign numeric_primary;
+//<sign>    ::=   <plus sign> | <minus sign> 	
+//	sign =
+//		{plus} plus_sign
+//		|{minus} minus_sign
+//	;
+
+//<numeric primary>    ::=
+//         <value expression primary>
+//     |     <numeric value function> 
+//	numeric_primary =
+//		{expr} value_expression_primary
+//		|{function} numeric_value_function
+//	;
+
+//<explicit row value constructor>    ::=
+//         <left paren> <row value constructor element> <comma> <row value constructor element list> <right paren>
+//     |     ROW <left paren> <row value constructor element list> <right paren>
+//     |     <row subquery>
+	
+
+/////////////////////////////////////////////////////////////////////////////////////
+	column_reference = unsupported_yet;
+	approximate_numeric_literal = unsupported_yet;
+
+

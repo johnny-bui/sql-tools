@@ -45,6 +45,7 @@ public class ProductionPrinter extends DepthFirstAdapter{
 		for (int i = 0; i < indent; ++i){
 			System.out.print(f.indentUnit());
 		}
+		System.out.print(indent + " ");
 		System.out.println(f.format(node));
 	}
 

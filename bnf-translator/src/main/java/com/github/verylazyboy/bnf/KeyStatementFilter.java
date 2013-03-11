@@ -4,7 +4,6 @@ import com.github.verylazyboy.bnf.analysis.DepthFirstAdapter;
 import com.github.verylazyboy.bnf.node.*;
 import java.util.HashSet;
 import java.util.Set;
-import org.sablecc.sablecc.analysis.AnalysisAdapter;
 
 /**
  * gets a list of key productions and picks up all productions, on which the key 
@@ -33,11 +32,14 @@ public class KeyStatementFilter extends DepthFirstAdapter{
 			newAddedProduct.clear();
 			g.getProductions().apply(this);
 			endSize = dependProduct.size();
-			System.out.println("Iteration " + i + " beginSize:" + beginSize + " endSize:" + endSize + " newAddedProductions:" + newAddedProduct);
+			System.out.println("*********************************************");
+			System.out.println("Iteration " + i + " beginSize:" + beginSize + " endSize:" + endSize /*+ " newAddedProductions:" + newAddedProduct*/);
 		}while(endSize > beginSize);
+		/*
 		System.out.println("*********************************************");
 		System.out.println("depProd:" + dependProduct);
 		System.out.println("*********************************************");
+		*/
 		return dependProduct;
 	}
 
@@ -50,15 +52,16 @@ public class KeyStatementFilter extends DepthFirstAdapter{
 		}
 		// else nothing to do
 	}
+
 /*
 	@Override
-	public void caseAIdElem(AIdElem node) {
+	public void caseAIdElementarElem(AIdElementarElem node) {
 		String dependProductionName = node.getIdentifier().getText();
 		newAddedProduct.add(dependProductionName);
 		dependProduct.add(dependProductionName);
-		super.caseAIdElem(node); 
+		super.caseAIdElementarElem(node); 
 	}
-*/ 
+*/
 }
 
 

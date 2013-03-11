@@ -22,11 +22,11 @@ import org.junit.Test;
 public class KeyStatementFilterTest extends TestCase{
 	@Test
 	public void testGetDependProd(){
-		//HtmlFilter htlmFilter = new HtmlFilter();
-		//htlmFilter.filter();
-		//Set<String> keySttm = htlmFilter.getKeyStatements();
-		Set<String> keySttm = new HashSet<String>();
-		keySttm.add("<identifier>");
+		HtmlFilter htlmFilter = new HtmlFilter();
+		htlmFilter.filter();
+		Set<String> keySttm = htlmFilter.getKeyStatements();
+		//Set<String> keySttm = new HashSet<String>();
+		//keySttm.add("<identifier>");
 		DataInputStream s = new DataInputStream(
 				new BufferedInputStream(
 					TestParseAll.class.getResourceAsStream("sql-03.bnf")));

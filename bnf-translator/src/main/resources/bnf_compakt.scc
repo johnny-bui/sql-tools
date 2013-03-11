@@ -204,13 +204,13 @@ Productions
 	elementar_element
 		{->elem} 
 	= {id} identifier
-		{->New elem.elementar(New elementar_elem.id(identifier))}
+		{->New elem.id(identifier)}
 	|{str} string
-		{->New elem.elementar(New elementar_elem.str(string))}
+		{->New elem.str(string)}
 	|{token} token_name
-		{->New elem.elementar(New elementar_elem.token(token_name))}
+		{->New elem.token(token_name)}
 	|{s_t_r} see_the_rule
-		{->New elem.elementar(New elementar_elem.s_t_r(see_the_rule))}
+		{->New elem.s_t_r(see_the_rule)}
 	;		
 
 	optional_element
@@ -230,7 +230,7 @@ Productions
 	= {one} element_term
 		{->[element_term.elems]}
 	| {more} [expr]:element_expression bar [term]:element_term
-		{->[New elem.term([expr.elems, term.elems])]}
+		{->[expr.elems, term.elems]}
 	;
 	
 	element_term 
@@ -249,7 +249,7 @@ Abstract Syntax Tree
 	tokens = T.token token_def*;
 
 	token_def = 	
-		[name]:identifier /*assign*/ alt+ /*product_sep*/
+		identifier /*assign*/ alt+ /*product_sep*/
 	;
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -261,16 +261,12 @@ Abstract Syntax Tree
 	alt = elem*;	
 
 	elem 
-	= {repetition} elem 
-	|{elementar} elementar_elem
-	|{optional} elem*
-	|{term} elem*
-	|{chain} elem* // 
-	;
-
-	elementar_elem
-	= {id} identifier
+	= {simple} elem 
+	| {repetition} elem // one or nothing (chose or not chose)
+	| {id} identifier
 	|{str} string
 	|{token} token_name
 	|{s_t_r} see_the_rule
+	|{optional} elem* // chose one of or nothing
+	|{chain} elem* // 
 	;

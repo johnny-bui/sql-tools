@@ -21,7 +21,7 @@ public class ProductPrinterTest extends TestCase{
 	public void testPrint() throws Exception{
 		DataInputStream s = new DataInputStream(
                 new BufferedInputStream(
-                ProductPrinterTest.class.getResourceAsStream("sql-03.bnf")));
+                ProductPrinterTest.class.getResourceAsStream("row_type_body.bnf")));
 		Lexer l = new Lexer(
 				new PushbackReader(
 				new InputStreamReader(s)));

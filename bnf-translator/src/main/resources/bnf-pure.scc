@@ -156,89 +156,58 @@ Productions
 
 	token_def = 	
 		identifier assign alts product_sep
-		{->New token_def(identifier,[alts.alt])}
 	;
 
 	////////////////////////////////////////////////////////////////////////////////
-	productions 
-	= T.production [p]:prod+
-		{-> New productions([p])}
-	;
+	productions = T.production prod+;
 	prod = 	
 		identifier assign alts product_sep
-		{->New prod(identifier,[alts.alt])}
 	;
 
 	alts 
-		{->[alt]:alt*}
 	= alt [tail]:alts_tail*
-		{->[alt,tail.alt]}
 	;
 
 	alt = 
 		elem *
 	;
 	alts_tail 
-		{->alt}
 	= bar alt
-		{->alt}
 	;
 
 	elem 
-	= {simple} simple_elem 
-		{->simple_elem.elem}
-	| {repetition} simple_elem dot_dot_dot
-		{->New elem.repetition(simple_elem.elem)}
+	= simple_elem dot_dot_dot?
 	;
 
 	simple_elem 
-		{->elem}
 	={elementar} elementar_element
-		{->elementar_element.elem}
-	|{optional} [op]:optional_element
-		{-> op.elem}
-	|{mandatory} [man]:mandatory_element
-		{-> man.elem}
+	|{optional} optional_element
+	|{mandatory} mandatory_element
 	;
 
-	elementar_element
-		{->elem} 
+	elementar_element 
 	= {id} identifier
-		{->New elem.id(identifier)}
 	|{str} string
-		{->New elem.str(string)}
 	|{token} token_name
-		{->New elem.token(token_name)}
 	|{s_t_r} see_the_rule
-		{->New elem.s_t_r(see_the_rule)}
 	;		
 
-	optional_element
-		{->elem} 
-	= l_bracket [expr]:element_expression r_bracket
-		{->New elem.optional([expr.elems])}
+	optional_element 
+	= l_bracket element_expression r_bracket
 	;
 
 	mandatory_element
-		{->elem}
-	= l_brace [expr]:element_expression r_brace
-		{->New elem.chain([expr.elems])}
+	= l_brace element_expression r_brace
 	;
 
 	element_expression
-		{->[elems]:elem*}
 	= {one} element_term
-		{->[element_term.elems]}
-	| {more} [expr]:element_expression bar [term]:element_term
-		{->[expr.elems, term.elems]}
+	| {more} element_expression bar element_term
 	;
 	
 	element_term 
-		{->[elems]:elem*}
 	= {single} elem
-		{->[elem]}
-	| {chain} [term]:element_term elem
-		{->[term.elems, elem]}
+	| {chain} element_term elem
 	;
 	
 Abstract Syntax Tree
@@ -249,24 +218,58 @@ Abstract Syntax Tree
 	tokens = T.token token_def*;
 
 	token_def = 	
-		[name]:identifier /*assign*/ alt+ /*product_sep*/
+		identifier assign alts product_sep
 	;
 
 	////////////////////////////////////////////////////////////////////////////////
-	productions = prod+;
+	productions = T.production prod+;
 	prod = 	
-		identifier /*assign*/ alt+ /*product_sep*/
+		identifier assign alts product_sep
 	;
 
-	alt = elem*;	
+	alts 
+	= alt [tail]:alts_tail*
+	;
+
+	alt = 
+		elem *
+	;
+	alts_tail 
+	= bar alt
+	;
 
 	elem 
-	= {simple} elem 
-	| {repetition} elem // one or nothing (chose or not chose)
-	| {id} identifier
+	= simple_elem dot_dot_dot?
+	;
+
+	simple_elem 
+	={elementar} elementar_element
+	|{optional} optional_element
+	|{mandatory} mandatory_element
+	;
+
+	elementar_element 
+	= {id} identifier
 	|{str} string
 	|{token} token_name
 	|{s_t_r} see_the_rule
-	|{optional} elem* // chose one of or nothing
-	|{chain} elem* // 
+	;		
+
+	optional_element 
+	= l_bracket element_expression r_bracket
 	;
+
+	mandatory_element
+	= l_brace element_expression r_brace
+	;
+
+	element_expression
+	= {one} element_term
+	| {more} element_expression bar element_term
+	;
+	
+	element_term 
+	= {single} elem
+	| {chain} element_term elem
+	;
+	

@@ -36,7 +36,7 @@ public class TokenFilter extends DepthFirstAdapter{
 
 	@Override
 	public void caseATokenDef(ATokenDef node) {
-		TIdentifier token = node.getIdentifier();
+		TIdentifier token = node.getName();
 		String name = token.getText();
 		if (ref.contains(name)){
 			tokens.add(name);

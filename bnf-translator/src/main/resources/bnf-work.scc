@@ -175,24 +175,34 @@ Productions
 	alt = 
 		elem* 
 	;
-	alts_tail {->alt} = bar alt{->alt};
+	alts_tail 
+		{->alt} 
+	= bar alt
+		{->alt}
+	;
 
 	elem =
-		{term} term {->term.elem}
+		{term} term 
+			{->term.elem}
 		|{option} l_bracket options r_bracket
 			{->New elem.option([options.list_opt])}
 	;
 
-	options {->[list_opt]:option*} = 
-		 option [tail]:options_tail*
+	options 
+		{->[list_opt]:option*} 
+	= option [tail]:options_tail*
 		{->[option, tail.option]}
 	;
 
 	option = 
 		elem+ 
 	;
-	options_tail{->option} 
-	= bar option {->option};
+
+	options_tail
+		{->option} 
+	= bar option 
+		{->option}
+	;
 
 
 	term {->elem} =
@@ -203,13 +213,17 @@ Productions
 	;
 
 
-	factor {->[elem]:elem} =
-		{id} [id]:identifier {-> New elem.id(id)}
-		| {str} [str]:string {-> New elem.str(str)}
-		| {token} token_name{->New elem.token(token_name)}
-		| {block} l_brace options r_brace
-			{-> New elem.option([options.list_opt])}
-		| {s_t_r} [str]:see_the_rule
+	factor 
+		{->[elem]:elem} 
+	= {id} [id]:identifier 
+		{-> New elem.id(id)}
+	| {str} [str]:string 
+		{-> New elem.str(str)}
+	| {token} token_name
+		{->New elem.token(token_name)}
+	| {block} l_brace options r_brace
+		{-> New elem.option([options.list_opt])}
+	| {s_t_r} [str]:see_the_rule
 			{-> New elem.s_t_r(str)}
 	;
 

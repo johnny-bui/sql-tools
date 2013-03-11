@@ -1,9 +1,17 @@
 
 Productions
 
-<row type body>    ::=   
-	<left paren> 
-		<field definition> 
-		[ { <comma> <field definition> }... ] 
-	<right paren>
+<condition information> ::=
+		{ EXCEPTION | CONDITION } 
+		<condition number> <condition information item> [ { <comma> <condition information item> }... ]
 ;
+
+
+<row type body> ::=  { <comma> <field definition> }... 
+;
+
+
+/*
+<with or without time zone> ::= WITH TIME ZONE ... | WITHOUT TIME ZONE
+;
+*/

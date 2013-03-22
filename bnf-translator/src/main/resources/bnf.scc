@@ -216,19 +216,19 @@ Productions
 	optional_element
 		{->elem} 
 	= l_bracket [expr]:element_expression r_bracket
-		{->New elem.optional([expr.elems])}
+		{->New elem.optional(New elem.chain([expr.elems]))}
 	;
 
 	mandatory_element
 		{->elem}
 	= l_brace [expr]:element_expression r_brace
-		{->New elem.chain([expr.elems])}
+		{->New elem.mandatory(New elem.chain([expr.elems]))}
 	;
 
 	element_expression
 		{->[elems]:elem*}
 	= {one} element_term
-		{->[element_term.elems]}
+		{->[element_term.elems]} 
 	| {more} [expr]:element_expression bar [term]:element_term
 		{->[New elem.term([expr.elems, term.elems])]}
 	;
@@ -238,7 +238,7 @@ Productions
 	= {single} elem
 		{->[elem]}
 	| {chain} [term]:element_term elem
-		{->[term.elems, elem]}
+		{->[New elem.chain([term.elems, elem])]}
 	;
 	
 Abstract Syntax Tree
@@ -249,7 +249,7 @@ Abstract Syntax Tree
 	tokens = T.token token_def*;
 
 	token_def = 	
-		[name]:identifier /*assign*/ alt+ /*product_sep*/
+		identifier /*assign*/ alt+ /*product_sep*/
 	;
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -263,9 +263,9 @@ Abstract Syntax Tree
 	elem 
 	= {repetition} elem 
 	|{elementar} elementar_elem
-	|{optional} elem*
-	|{term} elem*
-	|{chain} elem* // 
+	|{optional} elem // a elem in a bracket
+	|{term} elem* // one or more elements concated by a bar |
+	|{chain} elem* // one or more elements in a sequence
 	;
 
 	elementar_elem

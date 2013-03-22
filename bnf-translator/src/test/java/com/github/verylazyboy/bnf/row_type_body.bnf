@@ -2,6 +2,6 @@
 Productions
 
 <condition information> ::=
-		{ EXCEPTION | CONDITION | X }  {EXCEPTION CONDITION | X}
+		{ EXCEPTION | CONDITION | X }  {EXCEPTION}
 ;
 

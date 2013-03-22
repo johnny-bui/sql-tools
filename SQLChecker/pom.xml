@@ -16,25 +16,15 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>de.htwds</groupId>
+				<groupId>com.github.verylazyboy</groupId>
 				<artifactId>sablecc-maven-plugin</artifactId>
-				<version>2.0-beta.1</version>
+				<version>2.0-beta.2</version>
+				<configuration>
+					<grammar>src/main/resources/bnf.scc</grammar>
+				</configuration>
 				<executions>
-					<!--execution>
-						<id>mysql</id>
-						<configuration>
-							<grammar>src/main/resources/MySQLGrammar.scc</grammar>
-						</configuration>
-						<goals>
-							<goal>sablecc</goal>
-						</goals>
-					</execution-->
-					
 					<execution>
 						<id>bnf</id>
-						<configuration>
-							<grammar>src/main/resources/bnf.scc</grammar>
-						</configuration>
 						<goals>
 							<goal>sablecc</goal>
 						</goals>
